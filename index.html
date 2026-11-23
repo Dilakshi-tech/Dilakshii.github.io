@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lingo Mate - Interactive Language Learning</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-theme="default">
+
+  <!-- Top Header Navigation -->
+  <header class="app-header">
+    <div class="logo-container">
+      <div class="logo-icon">✨</div>
+      <h1 class="app-title">Lingo Mate</h1>
+    </div>
+    <nav class="main-nav">
+      <button class="nav-btn active" onclick="switchView('language-hub')">Languages</button>
+      <button class="nav-btn" onclick="switchView('learning-center')">Learning Center</button>
+      <button class="nav-btn" onclick="switchView('profile-goals')">Profile & Goals</button>
+      <button class="nav-btn admin-badge" onclick="switchView('admin-management')">Admin</button>
+    </nav>
+  </header>
+
+  <main class="main-container">
+
+    <!-- VIEW 1: Language Hub (Select Language) -->
+    <section id="language-hub" class="view-panel active">
+      <div class="hero-banner">
+        <h2>Welcome to Lingo Mate!</h2>
+        <p>Choose a language below to start your gamified learning journey with English support and native audio pronunciations.</p>
+      </div>
+
+      <div class="language-grid">
+        <div class="lang-card french" onclick="selectLanguage('french')">
+          <div class="avatar-badge">🧑‍🎨</div>
+          <h3>French</h3>
+          <p>Français • Soft Pastel Azure</p>
+        </div>
+        <div class="lang-card german" onclick="selectLanguage('german')">
+          <div class="avatar-badge">🧑‍🌾</div>
+          <h3>German</h3>
+          <p>Deutsch • Soft Pastel Amber</p>
+        </div>
+        <div class="lang-card japanese" onclick="selectLanguage('japanese')">
+          <div class="avatar-badge">🥷</div>
+          <h3>Japanese</h3>
+          <p>日本語 • Soft Pastel Rose</p>
+        </div>
+        <div class="lang-card korean" onclick="selectLanguage('korean')">
+          <div class="avatar-badge">🧑‍🎤</div>
+          <h3>Korean</h3>
+          <p>한국어 • Soft Pastel Mint</p>
+        </div>
+        <div class="lang-card chinese" onclick="selectLanguage('chinese')">
+          <div class="avatar-badge">🧑‍💼</div>
+          <h3>Chinese</h3>
+          <p>中文 • Soft Pastel Peach</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: Learning Center (Select Level & Tasks) -->
+    <section id="learning-center" class="view-panel">
+      <div class="section-header">
+        <h2 id="current-lang-title">Selected Language: French</h2>
+        <p>Pick a level to unlock activities, word-building mini-games, and pronunciations.</p>
+      </div>
+
+      <!-- Japanese Script Selector (Visible only when Japanese is selected) -->
+      <div id="japanese-script-selector" class="script-selector-container hidden">
+        <span class="selector-label">Select Japanese Writing System:</span>
+        <button class="script-btn active" onclick="selectJapaneseScript('hiragana')">Hiragana (ひらがな)</button>
+        <button class="script-btn" onclick="selectJapaneseScript('katakana')">Katakana (カタカナ)</button>
+        <button class="script-btn" onclick="selectJapaneseScript('kanji')">Kanji (漢字)</button>
+      </div>
+
+      <!-- Level Selector Grid -->
+      <div class="level-tabs">
+        <button class="level-btn active" onclick="selectLevel(1)">Level 1: Alphabet</button>
+        <button class="level-btn" onclick="selectLevel(2)">Level 2: Numbers</button>
+        <button class="level-btn" onclick="selectLevel(3)">Level 3: Articles</button>
+        <button class="level-btn" onclick="selectLevel(4)">Level 4: Tenses</button>
+        <button class="level-btn" onclick="selectLevel(5)">Level 5: Sentences</button>
+      </div>
+
+      <!-- Practice Area & Mini-Game Container -->
+      <div class="practice-box">
+        <div class="practice-header">
+          <h3 id="level-heading">Level 1: Alphabet Practice</h3>
+          <button class="audio-btn" onclick="speakCurrentItem()">🔊 Listen Pronunciation</button>
+        </div>
+
+        <div id="activity-content" class="activity-display">
+          <!-- Injected dynamically by JS -->
+        </div>
+
+        <!-- Level 5 Word Scramble Mini-Game Area -->
+        <div id="sentence-game-area" class="game-container hidden">
+          <h4>🧩 Sentence Builder Mini-Game</h4>
+          <p class="game-instruction">Arrange the scrambled words below into the correct English meaning!</p>
+          <div id="target-sentence-sub" class="target-subtitle">Target: "..."</div>
+          
+          <div id="word-pool" class="word-pool-box"></div>
+          <div id="word-slots" class="word-slots-box"></div>
+
+          <div class="game-controls">
+            <button class="action-btn hint" onclick="showHint()">💡 Helpful Hint</button>
+            <button class="action-btn reset" onclick="resetWordGame()">🔄 Reset Words</button>
+            <button class="action-btn submit" onclick="checkSentence()">✅ Check Answer</button>
+          </div>
+          <p id="game-feedback" class="feedback-msg"></p>
+          <div id="hint-box" class="hint-popup hidden"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: Profile & Goals -->
+    <section id="profile-goals" class="view-panel">
+      <div class="section-header">
+        <h2>User Profile & Daily Study Goals</h2>
+        <p>Manage your customizable practice time, study streak, and character avatar.</p>
+      </div>
+
+      <div class="profile-grid">
+        <!-- Avatar Selection -->
+        <div class="profile-card">
+          <h3>Choose Your Avatar</h3>
+          <div class="avatar-gallery">
+            <button class="avatar-option active" onclick="setAvatar('🧑‍🎓')">🧑‍🎓</button>
+            <button class="avatar-option" onclick="setAvatar('👩‍🎓')">👩‍🎓</button>
+            <button class="avatar-option" onclick="setAvatar('🧑‍🎨')">🧑‍🎨</button>
+            <button class="avatar-option" onclick="setAvatar('👩‍💻')">👩‍💻</button>
+            <button class="avatar-option" onclick="setAvatar('🥷')">🥷</button>
+            <button class="avatar-option" onclick="setAvatar('🧑‍🚀')">🧑‍🚀</button>
+          </div>
+          <div class="current-avatar-display">
+            Selected: <span id="user-avatar-preview" class="lg-avatar">🧑‍🎓</span>
+          </div>
+        </div>
+
+        <!-- Customizable Study Goals & Streaks -->
+        <div class="profile-card">
+          <h3>Customizable Study Tracker</h3>
+          <div class="stat-row">
+            <span>🔥 Current Study Streak:</span>
+            <strong id="streak-count">5 Days</strong>
+          </div>
+          
+          <div class="form-group">
+            <label for="daily-goal-input">Daily Target (Minutes):</label>
+            <input type="number" id="daily-goal-input" value="30" min="5" max="300" />
+          </div>
+
+          <div class="form-group">
+            <label for="weekly-days-input">Target Days / Week:</label>
+            <input type="number" id="weekly-days-input" value="5" min="1" max="7" />
+          </div>
+
+          <button class="action-btn save" onclick="saveGoals()">Save Settings</button>
+          <p id="goals-status" class="status-msg"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: Admin Management -->
+    <section id="admin-management" class="view-panel">
+      <div class="section-header">
+        <h2>Admin Management</h2>
+        <p>Edit system settings, manage user profiles, and customize curriculum sentences.</p>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-card">
+          <h3>System Settings</h3>
+          <div class="form-group">
+            <label>Default Pronunciation Speed:</label>
+            <select id="admin-tts-speed">
+              <option value="0.8">0.8x (Slow)</option>
+              <option value="1.0" selected>1.0x (Normal)</option>
+              <option value="1.2">1.2x (Fast)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Enable Strict Level Unlocking:</label>
+            <input type="checkbox" id="admin-unlock-check" checked />
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Create User Profile</h3>
+          <div class="form-group">
+            <label>User Identifier:</label>
+            <input type="text" id="new-user-id" placeholder="e.g. Learner_01" />
+          </div>
+          <button class="action-btn create" onclick="createAdminUser()">Create Profile</button>
+          <ul id="user-list" class="user-list-box">
+            <li>Learner_01 (Default Profile)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
