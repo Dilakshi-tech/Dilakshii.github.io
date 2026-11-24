@@ -1,0 +1,3217 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="dashboard">
+  <meta name="design-style" content="sticker">
+  <title>Lingo Mate — Sri Lankan G.C.E. O/L &amp; A/L Foreign Language Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      /* Base Sticker Pastel System (dynamically themed per active language) */
+      --background: #f2f7fd;
+      --surface-container-low: #ffffff;
+      --surface-container: #e6effa;
+      --surface-container-high: #d7e6f7;
+
+      --on-surface: #1e2433;
+      --on-surface-variant: #4a5568;
+
+      --outline: #8395b0;
+      --outline-variant: #ccd8ea;
+
+      --primary: #2d5fa8;
+      --on-primary: #ffffff;
+      --primary-container: #cfe2fc;
+      --on-primary-container: #15315b;
+      --secondary: #684ea3;
+      --tertiary: #2386a8;
+      --error: #c53030;
+      --on-error: #ffffff;
+      --positive: #1f7a4f;
+      --positive-bg: #dcf5e8;
+      --warning: #a3620a;
+      --warning-bg: #fef0d5;
+
+      /* Language Pastel Theme Swatches */
+      --lang-fr-bg: #eef5fc; --lang-fr-soft: #dceafa; --lang-fr-accent: #2d5fa8;
+      --lang-de-bg: #f1f8f4; --lang-de-soft: #ddefe3; --lang-de-accent: #277350;
+      --lang-ja-bg: #fdf1f5; --lang-ja-soft: #fadce6; --lang-ja-accent: #b8326a;
+      --lang-ko-bg: #f4f1fc; --lang-ko-soft: #e5defa; --lang-ko-accent: #5d43a6;
+      --lang-zh-bg: #fdf4ee; --lang-zh-soft: #fbe2d2; --lang-zh-accent: #b84a27;
+
+      /* 5 Distinct Level Pastel Treatments (dark readable text on soft pastel) */
+      --lvl-1-bg: #e7f6ec; --lvl-1-accent: #1f7a4f; --lvl-1-border: #9fd8b4;
+      --lvl-2-bg: #e6f2fc; --lvl-2-accent: #245ca8; --lvl-2-border: #9dc5f2;
+      --lvl-3-bg: #f1ebfc; --lvl-3-accent: #5e3ea1; --lvl-3-border: #c5b0f0;
+      --lvl-4-bg: #fef3e2; --lvl-4-accent: #9c560d; --lvl-4-border: #f0c98d;
+      --lvl-5-bg: #fdeaf0; --lvl-5-accent: #a62658; --lvl-5-border: #eba3be;
+
+      /* Data series */
+      --data-1: #2d5fa8;
+      --data-2: #684ea3;
+      --data-3: #2386a8;
+      --data-4: #b84a27;
+      --data-5: #1f7a4f;
+      --data-context: #c6d0df;
+
+      /* Fonts */
+      --font-headline: 'DM Sans', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', sans-serif;
+      --font-body: 'DM Sans', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', sans-serif;
+      --font-label: 'DM Sans', sans-serif;
+
+      /* Type scale */
+      --display-size: clamp(1.65rem, 1.35rem + 1.1vw, 2.15rem);
+      --headline-size: clamp(1.2rem, 1.08rem + 0.45vw, 1.45rem);
+      --subhead-size: clamp(1.02rem, 0.96rem + 0.2vw, 1.15rem);
+      --body-size: clamp(0.9375rem, 0.9rem + 0.12vw, 1rem);
+      --label-size: 0.75rem;
+
+      /* Spacing scale */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+
+      /* Shape & Style effects */
+      --rounded: 1rem;
+      --rounded-lg: 1.5rem;
+      --rounded-full: 9999px;
+      --shadow-tint: 0 6px 18px rgb(45 95 168 / 0.12);
+      --shadow-tint-deep: 0 10px 26px rgb(45 95 168 / 0.22);
+      --shadow-soft: 0 4px 14px rgb(30 36 51 / 0.06);
+      --focus: var(--primary);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 380ms;
+    }
+
+    /* Language pastel theme overrides */
+    body[data-lang="fr"] {
+      --background: var(--lang-fr-bg); --surface-container: var(--lang-fr-soft);
+      --primary: var(--lang-fr-accent); --primary-container: #cfe2fc; --on-primary-container: #15315b;
+      --shadow-tint: 0 6px 18px rgb(45 95 168 / 0.13);
+    }
+    body[data-lang="de"] {
+      --background: var(--lang-de-bg); --surface-container: var(--lang-de-soft);
+      --primary: var(--lang-de-accent); --primary-container: #ccebd8; --on-primary-container: #14422c;
+      --shadow-tint: 0 6px 18px rgb(39 115 80 / 0.13);
+    }
+    body[data-lang="ja"] {
+      --background: var(--lang-ja-bg); --surface-container: var(--lang-ja-soft);
+      --primary: var(--lang-ja-accent); --primary-container: #f8cfe0; --on-primary-container: #5c1332;
+      --shadow-tint: 0 6px 18px rgb(184 50 106 / 0.13);
+    }
+    body[data-lang="ko"] {
+      --background: var(--lang-ko-bg); --surface-container: var(--lang-ko-soft);
+      --primary: var(--lang-ko-accent); --primary-container: #ddd3fa; --on-primary-container: #311f66;
+      --shadow-tint: 0 6px 18px rgb(93 67 166 / 0.13);
+    }
+    body[data-lang="zh"] {
+      --background: var(--lang-zh-bg); --surface-container: var(--lang-zh-soft);
+      --primary: var(--lang-zh-accent); --primary-container: #fad6c0; --on-primary-container: #5e220e;
+      --shadow-tint: 0 6px 18px rgb(184 74 39 / 0.13);
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { overflow-x: clip; margin: 0; padding: 0; }
+    header { position: static !important; }
+    body {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      color: var(--on-surface);
+      background-color: var(--background);
+      transition: background-color var(--dur-long) var(--ease-out);
+    }
+    button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+    h1, h2, h3, h4, p { margin: 0; }
+
+    /* Focus rings */
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Shell layout */
+    .app-shell {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+      max-width: 1440px;
+      margin: 0 auto;
+      gap: var(--space-lg);
+      padding: var(--space-md);
+    }
+    .app-shell * { min-width: 0; }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      box-shadow: var(--shadow-tint);
+      padding: var(--space-lg) var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      align-self: start;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    .brand-mark {
+      width: 44px; height: 44px;
+      border-radius: var(--rounded-full);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .brand-title { font-weight: 900; font-size: 1.2rem; letter-spacing: -0.02em; color: var(--on-surface); }
+    .brand-sub { font-size: var(--label-size); color: var(--on-surface-variant); font-weight: 600; }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      width: 100%;
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border: none;
+      border-radius: var(--rounded-full);
+      background: transparent;
+      color: var(--on-surface);
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      text-align: left;
+      transition: background-color var(--dur-micro) var(--ease-out), transform var(--dur-short) var(--ease-bounce);
+    }
+    .nav-btn:hover { background: var(--surface-container); transform: translateX(2px); }
+    .nav-btn[aria-current="page"] {
+      background: var(--primary);
+      color: var(--on-primary);
+      box-shadow: var(--shadow-tint);
+    }
+    .nav-group-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      padding: var(--space-sm) var(--space-md) var(--space-xs);
+    }
+
+    /* Main Content Area */
+    .main-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+    .topbar {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      box-shadow: var(--shadow-tint);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+    .mobile-menu-btn {
+      display: none;
+      min-height: 44px;
+      min-width: 44px;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--rounded-full);
+      border: 1px solid var(--outline-variant);
+      background: var(--surface-container);
+      cursor: pointer;
+    }
+    .context-pills {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* Typography */
+    .display-title {
+      font-family: var(--font-headline);
+      font-weight: 900;
+      font-size: var(--display-size);
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+    }
+    .display-title em { font-style: normal; color: var(--primary); }
+    .section-title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--headline-size);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .card-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--subhead-size);
+      line-height: 1.3;
+    }
+    .kicker {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+    }
+    .tabular { font-variant-numeric: tabular-nums; }
+
+    /* Cards & Grids */
+    .card {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow-tint);
+      padding: var(--space-lg);
+      transition: transform var(--dur-short) var(--ease-bounce), box-shadow var(--dur-short) var(--ease-out);
+    }
+    .card-hero {
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      background: var(--surface-container-low);
+      box-shadow: var(--shadow-tint);
+    }
+    .card-soft {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .split-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    /* Buttons & Badges */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--rounded-full);
+      border: 2px solid transparent;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform var(--dur-short) var(--ease-bounce), background-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .btn:hover:not(:disabled) { transform: scale(1.02); }
+    .btn:active:not(:disabled) { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.48; cursor: not-allowed; }
+    .btn-primary { background: var(--primary); color: var(--on-primary); box-shadow: var(--shadow-tint); }
+    .btn-primary:hover:not(:disabled) { box-shadow: var(--shadow-tint-deep); }
+    .btn-secondary { background: var(--primary-container); color: var(--on-primary-container); }
+    .btn-outline { background: var(--surface-container-low); border-color: var(--outline); color: var(--on-surface); }
+    .btn-ghost { background: transparent; color: var(--primary); padding: var(--space-xs) var(--space-md); }
+    .btn-sm { min-height: 36px; padding: var(--space-xs) var(--space-md); font-size: 0.875rem; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--rounded-full);
+      font-size: var(--label-size);
+      font-weight: 700;
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+    }
+    .badge-positive { background: var(--positive-bg); color: var(--positive); }
+    .badge-warning { background: var(--warning-bg); color: var(--warning); }
+    .badge-neutral { background: var(--surface-container); color: var(--on-surface-variant); }
+
+    /* Progress Bar */
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: var(--surface-container-high);
+      border-radius: var(--rounded-full);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: var(--rounded-full);
+      transition: width var(--dur-long) var(--ease-out);
+    }
+
+    /* Level 1-5 Distinct Treatments (dark readable text, high contrast) */
+    .lvl-card {
+      border-radius: var(--rounded);
+      padding: var(--space-lg);
+      border: 2px solid transparent;
+      color: var(--on-surface);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .lvl-1 { background: var(--lvl-1-bg); border-color: var(--lvl-1-border); }
+    .lvl-1 .lvl-pill { background: var(--lvl-1-accent); color: var(--on-primary); }
+    .lvl-2 { background: var(--lvl-2-bg); border-color: var(--lvl-2-border); }
+    .lvl-2 .lvl-pill { background: var(--lvl-2-accent); color: var(--on-primary); }
+    .lvl-3 { background: var(--lvl-3-bg); border-color: var(--lvl-3-border); }
+    .lvl-3 .lvl-pill { background: var(--lvl-3-accent); color: var(--on-primary); }
+    .lvl-4 { background: var(--lvl-4-bg); border-color: var(--lvl-4-border); }
+    .lvl-4 .lvl-pill { background: var(--lvl-4-accent); color: var(--on-primary); }
+    .lvl-5 { background: var(--lvl-5-bg); border-color: var(--lvl-5-border); }
+    .lvl-5 .lvl-pill { background: var(--lvl-5-accent); color: var(--on-primary); }
+    .lvl-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 12px; border-radius: var(--rounded-full);
+      font-size: var(--label-size); font-weight: 800; width: fit-content;
+    }
+
+    /* Form Controls */
+    .field { display: flex; flex-direction: column; gap: var(--space-xs); }
+    .field label { font-size: 0.875rem; font-weight: 700; color: var(--on-surface); }
+    .input, .select {
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-full);
+      border: 2px solid var(--outline-variant);
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      width: 100%;
+    }
+    .select { padding-right: var(--space-xl); }
+    .input:focus, .select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px var(--primary-container); }
+
+    /* Interactive elements inside lessons & games */
+    .chip-row { display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; }
+    .chip {
+      min-height: 40px;
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      border: 2px solid var(--outline-variant);
+      background: var(--surface-container-low);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform var(--dur-short) var(--ease-bounce), background-color var(--dur-micro) var(--ease-out);
+    }
+    .chip:hover { transform: scale(1.03); background: var(--surface-container); }
+    .chip.active { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+
+    .script-box {
+      font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.25;
+      color: var(--on-surface);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .ko-text { word-break: keep-all; overflow-wrap: break-word; }
+
+    .vocab-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1.2fr auto;
+      gap: var(--space-sm);
+      align-items: center;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded);
+      background: var(--surface-container);
+    }
+
+    .tone-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+    .tone-card {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded);
+      padding: var(--space-sm);
+      text-align: center;
+      border: 2px solid var(--outline-variant);
+    }
+
+    .chart-box { min-height: 280px; position: relative; width: 100%; }
+
+    .feedback-banner {
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded);
+      font-weight: 700;
+      margin-top: var(--space-sm);
+    }
+    .feedback-ok { background: var(--positive-bg); color: var(--positive); }
+    .feedback-err { background: var(--warning-bg); color: var(--error); }
+
+    .avatar-btn {
+      width: 56px; height: 56px;
+      border-radius: var(--rounded-full);
+      border: 3px solid transparent;
+      background: var(--surface-container);
+      font-size: 1.65rem;
+      cursor: pointer;
+      display: grid; place-items: center;
+      transition: transform var(--dur-short) var(--ease-bounce);
+    }
+    .avatar-btn.active { border-color: var(--primary); background: var(--primary-container); transform: scale(1.06); }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: var(--space-sm) var(--space-md); text-align: left; }
+    thead th { background: var(--surface-container); font-size: var(--label-size); text-transform: uppercase; letter-spacing: 0.05em; }
+    tbody tr:nth-child(even) { background: var(--background); }
+
+    /* Mobile Drawer & Breakpoints */
+    @media (max-width: 960px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .sidebar.open { display: flex; }
+      .mobile-menu-btn { display: inline-flex; }
+      .split-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .app-shell { padding: var(--space-sm); gap: var(--space-md); }
+      .vocab-row { grid-template-columns: 1fr; }
+      .tone-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body data-lang="fr">
+  <div class="app-shell">
+    <!-- Sidebar Navigation (12 Dashboards) -->
+    <aside id="sidebar" class="sidebar" aria-label="Primary navigation">
+      <div class="brand">
+        <div class="brand-mark" id="sidebar-avatar" aria-hidden="true">L</div>
+        <div>
+          <div class="brand-title">Lingo Mate</div>
+          <div class="brand-sub">SL G.C.E. O/L &amp; A/L Studio</div>
+        </div>
+      </div>
+
+      <nav class="nav-list" id="nav-list">
+        <div class="nav-group-label">Study Hub</div>
+        <button class="nav-btn" data-view="home" onclick="navigateTo('home')" aria-current="page"><i data-lucide="home"></i> Home</button>
+        <button class="nav-btn" data-view="languages" onclick="navigateTo('languages')"><i data-lucide="globe"></i> Languages</button>
+        <button class="nav-btn" data-view="category" onclick="navigateTo('category')"><i data-lucide="graduation-cap"></i> O/L &amp; A/L Pathway</button>
+        <button class="nav-btn" data-view="levels" onclick="navigateTo('levels')"><i data-lucide="layers"></i> 5-Level Roadmap</button>
+        <button class="nav-btn" data-view="lessons" onclick="navigateTo('lessons')"><i data-lucide="book-open"></i> Lessons &amp; Scripts</button>
+
+        <div class="nav-group-label">Practice &amp; Play</div>
+        <button class="nav-btn" data-view="activities" onclick="navigateTo('activities')"><i data-lucide="puzzle"></i> Learning Activities</button>
+        <button class="nav-btn" data-view="games" onclick="navigateTo('games')"><i data-lucide="gamepad-2"></i> 10 Mini-Games</button>
+        <button class="nav-btn" data-view="tasks" onclick="navigateTo('tasks')"><i data-lucide="check-square"></i> Daily Tasks</button>
+
+        <div class="nav-group-label">Progress &amp; Account</div>
+        <button class="nav-btn" data-view="analytics" onclick="navigateTo('analytics')"><i data-lucide="bar-chart-3"></i> Progress &amp; Analytics</button>
+        <button class="nav-btn" data-view="profile" onclick="navigateTo('profile')"><i data-lucide="award"></i> Student Profile</button>
+        <button class="nav-btn" data-view="goals" onclick="navigateTo('goals')"><i data-lucide="target"></i> Study Goals</button>
+        <button class="nav-btn" data-view="settings" onclick="navigateTo('settings')"><i data-lucide="settings"></i> Profile Settings</button>
+      </nav>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-col">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:var(--space-sm);">
+          <button class="mobile-menu-btn" onclick="toggleMobileNav()" aria-label="Toggle navigation menu">
+            <i data-lucide="menu"></i>
+          </button>
+          <div>
+            <div class="kicker" id="topbar-kicker">Sri Lankan National Curriculum Companion</div>
+            <div style="font-weight:800;font-size:1.05rem;" id="topbar-subtitle">French · G.C.E. O/L (Subject 68)</div>
+          </div>
+        </div>
+
+        <div class="context-pills">
+          <span class="badge" id="pill-lang">French</span>
+          <span class="badge badge-neutral" id="pill-cat">O/L</span>
+          <span class="badge badge-positive tabular" id="pill-xp">0 XP</span>
+          <span class="badge badge-warning tabular" id="pill-streak">0-day streak</span>
+        </div>
+      </header>
+
+      <div id="view-root" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <api-shim></api-shim>
+  <script>
+    // =========================================================================
+    // 1. CURRICULUM & DOMAIN DATA (All 5 Languages x 5 Levels + Scripts)
+    // =========================================================================
+    const LANGUAGES = {
+      fr: {
+        id: `fr`, name: `French`, nativeName: `Français`, olCode: `68`,
+        themeLabel: `Soft Sky Blue`, speechLang: `fr-FR`,
+        scriptNote: `Latin alphabet with diacritics (é, è, ê, ç, à, ù) and silent final consonants.`,
+        summary: `Popular G.C.E. O/L (Code 68) and A/L European language for diplomacy, hospitality, and international studies.`
+      },
+      de: {
+        id: `de`, name: `German`, nativeName: `Deutsch`, olCode: `69`,
+        themeLabel: `Soft Mint`, speechLang: `de-DE`,
+        scriptNote: `Latin alphabet with umlauts (ä, ö, ü) and Eszett (ß); all nouns are capitalised.`,
+        summary: `G.C.E. O/L (Code 69) and A/L language valued for engineering, vocational training, and European university pathways.`
+      },
+      ja: {
+        id: `ja`, name: `Japanese`, nativeName: `日本語`, olCode: `71`,
+        themeLabel: `Soft Sakura Pink`, speechLang: `ja-JP`,
+        scriptNote: `Three coordinated scripts: Hiragana (native grammar), Katakana (loanwords), and Kanji (On'yomi & Kun'yomi readings).`,
+        summary: `Priority Sri Lankan Trilingual & Ministry of Education expansion language (O/L Code 71 & A/L) supporting high-skilled careers in Japan.`
+      },
+      ko: {
+        id: `ko`, name: `Korean`, nativeName: `한국어`, olCode: `73`,
+        themeLabel: `Soft Lavender`, speechLang: `ko-KR`,
+        scriptNote: `Hangul (한글) phonetic syllable blocks built from 14 basic consonants and 10 basic vowels.`,
+        summary: `G.C.E. O/L (Code 73) and EPS-aligned language for technology, culture, and skilled employment pathways in South Korea.`
+      },
+      zh: {
+        id: `zh`, name: `Chinese Mandarin`, nativeName: `普通话`, olCode: `74`,
+        themeLabel: `Soft Peach`, speechLang: `zh-CN`,
+        scriptNote: `Hanzi logograms paired with Pinyin romanisation and 4 lexical tones plus a neutral tone.`,
+        summary: `G.C.E. O/L (Code 74) and A/L global commerce language supporting trade, logistics, and Belt & Road scholarships.`
+      }
+    };
+
+    const LEVEL_META = [
+      { level: 1, title: `Foundation`, subtitle: `Scripts, Sounds, Numbers & Greetings`, lessonsCount: 4,
+        objectives: `Master core writing systems, pronunciation rules, numbers 1–100, dates, greetings, colours, and family terms.` },
+      { level: 2, title: `Basic Communication`, subtitle: `Daily Routines, Food & Shopping`, lessonsCount: 4,
+        objectives: `Conduct self-introductions, describe daily routines, order food, shop in local markets, and use present tense verbs.` },
+      { level: 3, title: `Intermediate`, subtitle: `Tenses, Feelings & Cultural Emails`, lessonsCount: 4,
+        objectives: `Combine past, present, and future tenses; express opinions; read short narratives; write emails about Sri Lankan festivals like Vesak & Esala Perahera.` },
+      { level: 4, title: `Upper Intermediate`, subtitle: `Registers, Debates & Essays`, lessonsCount: 4,
+        objectives: `Contrast formal vs. informal registers, debate studying abroad, analyse newspaper extracts, and use idiomatic expressions.` },
+      { level: 5, title: `Advanced & Professional`, subtitle: `Commerce, Interviews & Exam Mastery`, lessonsCount: 4,
+        objectives: `Deliver Ceylon Tea & Spices export pitches, complete mock interviews, translate formal passages, and sit G.C.E. A/L & O/L exam prep.` }
+    ];
+
+    const AVATARS = [
+      { id: `lotus`, icon: `🪷`, label: `Nelum Lotus` },
+      { id: `lion`, icon: `🦁`, label: `Sinhala Lion` },
+      { id: `tea`, icon: `🍵`, label: `Ceylon Tea` },
+      { id: `book`, icon: `📘`, label: `Scholar` },
+      { id: `compass`, icon: `🧭`, label: `Explorer` },
+      { id: `owl`, icon: `🦉`, label: `Night Owl` }
+    ];
+
+    // Rich writing system guides for Japanese, Korean, Chinese (plus French/German orthography)
+    const SCRIPT_GUIDES = {
+      ja: {
+        title: `Japanese Writing Systems (Hiragana, Katakana & Kanji)`,
+        hiragana: [
+          { ch: `あ`, romaji: `a`, stroke: `3 strokes: horizontal top, vertical curve, loop` },
+          { ch: `い`, romaji: `i`, stroke: `2 strokes: left hook down, shorter right stroke` },
+          { ch: `う`, romaji: `u`, stroke: `2 strokes: top slant dash, sweeping ear curve` },
+          { ch: `え`, romaji: `e`, stroke: `2 strokes: top dash, Z-shaped sweep` },
+          { ch: `お`, romaji: `o`, stroke: `3 strokes: crossbar, vertical loop, right dot` },
+          { ch: `か`, romaji: `ka`, stroke: `3 strokes: curved hook, diagonal slash, right dot` }
+        ],
+        katakana: [
+          { ch: `ア`, romaji: `a`, stroke: `2 strokes: angled top bar, curved downstroke` },
+          { ch: `イ`, romaji: `i`, stroke: `2 strokes: diagonal left stroke, vertical stem` },
+          { ch: `ス`, romaji: `su`, stroke: `2 strokes: horizontal hook, right leg` },
+          { ch: `リ`, romaji: `ri`, stroke: `2 strokes: short left vertical, long curved right` },
+          { ch: `ラ`, romaji: `ra`, stroke: `2 strokes: short top bar, angled sweep` },
+          { ch: `ン`, romaji: `n`, stroke: `2 strokes: upper dot, upward-sweeping tail` }
+        ],
+        kanji: [
+          { ch: `日`, on: `ニチ / ジツ (nichi / jitsu)`, kun: `ひ / か (hi / ka)`, meaning: `Sun, Day`, stroke: `4 strokes: left vertical, top-right corner, middle bar, bottom close` },
+          { ch: `学`, on: `ガク (gaku)`, kun: `まな.ぶ (manabu)`, meaning: `Study, Learning`, stroke: `8 strokes: three top dots, roof cover, child radical below` },
+          { ch: `茶`, on: `チャ / サ (cha / sa)`, kun: `—`, meaning: `Tea (e.g. Ceylon Tea)`, stroke: `9 strokes: grass radical top, person roof, tree base` },
+          { ch: `語`, on: `ゴ (go)`, kun: `かた.る (kataru)`, meaning: `Language, Word`, stroke: `14 strokes: speech radical left, five + mouth right` }
+        ]
+      },
+      ko: {
+        title: `Korean Hangul (한글) Syllable Blocks`,
+        blocks: [
+          { ch: `가`, romaji: `ga`, parts: `ㄱ (g) + ㅏ (a)`, note: `Consonant on left, vertical vowel on right` },
+          { ch: `나`, romaji: `na`, parts: `ㄴ (n) + ㅏ (a)`, note: `Used in 나 (I / informal)` },
+          { ch: `한`, romaji: `han`, parts: `ㅎ (h) + ㅏ (a) + ㄴ (n)`, note: `CVC block with batchim (final consonant ㄴ)` },
+          { ch: `국`, romaji: `guk`, parts: `ㄱ (g) + ㅜ (u) + ㄱ (k)`, note: `Horizontal vowel ㅜ sits beneath initial consonant` },
+          { ch: `물`, romaji: `mul`, parts: `ㅁ (m) + ㅜ (u) + ㄹ (l)`, note: `Means "water"` },
+          { ch: `차`, romaji: `cha`, parts: `ㅊ (ch) + ㅏ (a)`, note: `Means "tea"` }
+        ]
+      },
+      zh: {
+        title: `Chinese Mandarin Pinyin & Tone Visualiser`,
+        tones: [
+          { tone: `1st Tone (High Level)`, mark: `mā (妈)`, contour: `55 ━━━`, meaning: `Mother`, pitch: `Steady high pitch` },
+          { tone: `2nd Tone (Rising)`, mark: `má (麻)`, contour: `35 ╱`, meaning: `Hemp / Numb`, pitch: `Rises like asking "What?"` },
+          { tone: `3rd Tone (Dipping)`, mark: `mǎ (马)`, contour: `214 ╲╱`, meaning: `Horse`, pitch: `Drops low then rises gently` },
+          { tone: `4th Tone (Falling)`, mark: `mà (骂)`, contour: `51 ╲`, meaning: `Scold`, pitch: `Sharp, firm drop` }
+        ],
+        hanzi: [
+          { ch: `茶`, pinyin: `chá`, tone: 2, meaning: `Tea`, stroke: `9 strokes` },
+          { ch: `学`, pinyin: `xué`, tone: 2, meaning: `Study`, stroke: `8 strokes` },
+          { ch: `好`, pinyin: `hǎo`, tone: 3, meaning: `Good`, stroke: `6 strokes` },
+          { ch: `谢`, pinyin: `xiè`, tone: 4, meaning: `Thank`, stroke: `12 strokes` }
+        ]
+      }
+    };
+
+    // Structured Lessons: 5 Languages x 5 Levels (2 focused lessons per level = 50 rich lessons)
+    function makeLesson(lang, level, idx, topic, title, olTag, alTag, vocab, grammarTitle, grammarNote, dialogue, readingText, writingPrompt) {
+      return {
+        id: `${lang}-L${level}-${idx}`,
+        lang, level, idx, topic, title, olTag, alTag,
+        vocab, grammarTitle, grammarNote, dialogue, readingText, writingPrompt
+      };
+    }
+
+    const LESSONS = [
+      // ---------------- FRENCH ----------------
+      makeLesson(`fr`, 1, 1, `Alphabets & Greetings`, `Bonjour! Sounds, Accents & First Greetings`, `O/L Unit 1`, `A/L Foundation`,
+        [
+          { term: `Bonjour`, pron: `bon-ZHOOR`, en: `Good morning / Hello` },
+          { term: `Bonsoir`, pron: `bon-SWAHR`, en: `Good evening` },
+          { term: `Merci beaucoup`, pron: `mehr-SEE boh-KOO`, en: `Thank you very much` },
+          { term: `Ça va bien`, pron: `sah vah BYAN`, en: `I am doing well` },
+          { term: `À bientôt`, pron: `ah byan-TOH`, en: `See you soon` }
+        ],
+        `Accents & Silent Endings`,
+        `The acute accent (é as in "café") sounds like "ay", while final consonants (-s, -t, -d, -x) are usually silent unless followed by a vowel liaison.`,
+        [
+          { spk: `Kavindi`, line: `Bonjour! Comment allez-vous?`, en: `Hello! How are you?` },
+          { spk: `Luc`, line: `Très bien, merci! Et vous?`, en: `Very well, thank you! And you?` }
+        ],
+        `Bonjour! Je m'appelle Kavindi et j'habite à Kandy. Le matin, je dis bonjour à mes professeurs.`,
+        `Write three French greetings you would use with a teacher and a classmate in Colombo.`
+      ),
+      makeLesson(`fr`, 1, 2, `Numbers, Dates & Family`, `Les Nombres, La Date et La Famille`, `O/L Unit 2`, `A/L Foundation`,
+        [
+          { term: `Un / Deux / Trois`, pron: `uhn / duh / twah`, en: `One / Two / Three` },
+          { term: `Aujourd'hui`, pron: `oh-zhoor-DWEE`, en: `Today` },
+          { term: `La mère / Le père`, pron: `lah mehr / luh pehr`, en: `The mother / The father` },
+          { term: `Le frère / La sœur`, pron: `luh frehr / lah suhr`, en: `The brother / The sister` },
+          { term: `Bleu / Vert`, pron: `bluh / vehr`, en: `Blue / Green` }
+        ],
+        `Grammatical Gender & Articles`,
+        `Every French noun is masculine (le / un) or feminine (la / une). Plural nouns take "les" or "des".`,
+        [
+          { spk: `Nimal`, line: `Quelle est la date aujourd'hui?`, en: `What is the date today?` },
+          { spk: `Claire`, line: `C'est le vingt-quatre novembre.`, en: `It is the 24th of November.` }
+        ],
+        `Dans ma famille à Galle, il y a quatre personnes : mon père, ma mère, ma petite sœur et moi.`,
+        `Introduce two members of your family in French using "mon" or "ma" and state their favourite colour.`
+      ),
+      makeLesson(`fr`, 2, 1, `Self-Introduction & Exchange`, `Sri Lankan Student Meets a French Exchange Peer`, `O/L Unit 4`, `A/L Core`,
+        [
+          { term: `Je viens du Sri Lanka`, pron: `zhuh vyan dyu sree lahn-kah`, en: `I come from Sri Lanka` },
+          { term: `J'étudie en onzième année`, pron: `zhay-tyu-dee...`, en: `I study in Grade 11` },
+          { term: `J'aime le cricket`, pron: `zhem luh kree-ket`, en: `I like cricket` },
+          { term: `Mon plat préféré`, pron: `mohn plah pray-fay-ray`, en: `My favourite dish` }
+        ],
+        `Present Tense -ER Verbs (Parler, Aimer)`,
+        `Drop -er and add -e, -es, -e, -ons, -ez, -ent: Je parle, tu parles, il/elle parle, nous parlons, vous parlez, ils parlent.`,
+        [
+          { spk: `Tharushi`, line: `Salut Marc! Je m'appelle Tharushi. Tu aimes le Sri Lanka?`, en: `Hi Marc! My name is Tharushi. Do you like Sri Lanka?` },
+          { spk: `Marc`, line: `Oui! J'adore le riz au curry et les plages de Mirissa.`, en: `Yes! I love rice and curry and the beaches of Mirissa.` }
+        ],
+        `Chaque matin, Tharushi prend le bus pour aller au lycée à Maharagama. Elle étudie les sciences et le français.`,
+        `Write a 3-sentence self-introduction for an exchange student visiting your school.`
+      ),
+      makeLesson(`fr`, 2, 2, `Food & Shopping`, `Au Marché de Pettah : Food & Quantities`, `O/L Unit 5`, `A/L Core`,
+        [
+          { term: `Combien coûte...?`, pron: `kohm-byan koot`, en: `How much does ... cost?` },
+          { term: `Un kilo de mangues`, pron: `uhn kee-loh duh mahng`, en: `One kilo of mangoes` },
+          { term: `Je voudrais du thé`, pron: `zhuh voo-dreh dyu tay`, en: `I would like some tea` },
+          { term: `L'addition, s'il vous plaît`, pron: `lah-dee-syohn`, en: `The bill, please` }
+        ],
+        `Partitive Articles (du, de la, des)`,
+        `Use "du" (masc.), "de la" (fem.), or "des" (plural) to mean "some" food or drink.`,
+        [
+          { spk: `Client`, line: `Bonjour madame, je voudrais deux cents grammes de thé de Ceylan.`, en: `Hello madam, I would like 200 grams of Ceylon tea.` },
+          { spk: `Vendeuse`, line: `Voici! Ça fait mille cinq cents roupies.`, en: `Here you are! That makes 1,500 rupees.` }
+        ],
+        `Au marché, on achète des bananes, de la cannelle et du thé noir pour la famille.`,
+        `Write a short shopping dialogue buying fruit or tea in rupees.`
+      ),
+      makeLesson(`fr`, 3, 1, `Tenses & Feelings`, `Passé Composé & Futur Proche`, `O/L Unit 8`, `A/L Bridge`,
+        [
+          { term: `Hier, j'ai visité`, pron: `yehr zhay vee-zee-tay`, en: `Yesterday, I visited` },
+          { term: `Je suis content(e)`, pron: `zhuh swee kohn-tahn`, en: `I am happy` },
+          { term: `Demain, je vais partir`, pron: `duh-man zhuh veh pahr-teer`, en: `Tomorrow, I am going to leave` },
+          { term: `À mon avis`, pron: `ah mohn nah-vee`, en: `In my opinion` }
+        ],
+        `Passé Composé vs. Futur Proche`,
+        `Completed past actions use avoir/être + past participle (J'ai visité). Near future uses aller + infinitive (Je vais célébrer).`,
+        [
+          { spk: `Dineth`, line: `À mon avis, le train de Kandy était magnifique hier!`, en: `In my opinion, the Kandy train was magnificent yesterday!` },
+          { spk: `Amélie`, line: `Oui, et demain nous allons visiter le Jardin botanique.`, en: `Yes, and tomorrow we are going to visit the Botanical Garden.` }
+        ],
+        `La semaine dernière, notre classe a organisé une exposition culturelle. Tout le monde était très fier.`,
+        `Describe what you did last weekend and one plan for tomorrow using passé composé and futur proche.`
+      ),
+      makeLesson(`fr`, 3, 2, `Cultural Email`, `Email to a French Friend: Vesak & Esala Perahera`, `O/L Exam Prep`, `A/L Reading`,
+        [
+          { term: `Les lanternes de Vesak`, pron: `lay lahn-tehrn duh veh-sahk`, en: `Vesak lanterns` },
+          { term: `Le défilé traditionnel`, pron: `luh day-fee-lay`, en: `The traditional procession` },
+          { term: `La solidarité`, pron: `lah soh-lee-dah-ree-tay`, en: `Solidarity / community spirit` },
+          { term: `Cordialement`, pron: `kohr-dyahl-mahn`, en: `Kind regards` }
+        ],
+        `Informal Email Structure`,
+        `Open with "Cher / Chère [Name]," share vivid past/present impressions, and close with "Amitiés" or "À très bientôt".`,
+        [
+          { spk: `Email Opening`, line: `Chère Camille, je t'écris pour te parler de la fête de Vesak au Sri Lanka.`, en: `Dear Camille, I am writing to tell you about the Vesak festival in Sri Lanka.` },
+          { spk: `Email Detail`, line: `Les rues brillent avec des lanternes colorées et les gens offrent du dansal.`, en: `The streets shine with colourful lanterns and people offer free food stalls (dansal).` }
+        ],
+        `En juillet ou août, l'Esala Perahera illumine Kandy avec ses danseurs traditionnels et ses tambours.`,
+        `Draft a 4-sentence email inviting a French penfriend to experience Vesak or Esala Perahera.`
+      ),
+      makeLesson(`fr`, 4, 1, `Formal vs Informal & Debates`, `Studying Abroad: Pros & Cons`, `O/L Extension`, `A/L Unit 3`,
+        [
+          { term: `D'un côté / D'un autre côté`, pron: `duhn koh-tay`, en: `On one hand / On the other hand` },
+          { term: `Il faut que nous réfléchissions`, pron: `eel foh kuh...`, en: `We must think carefully` },
+          { term: `L'éloignement familial`, pron: `lay-lwahn-yuh-mahn`, en: `Being far from family` },
+          { term: `Les débouchés professionnels`, pron: `lay day-boo-shay`, en: `Career prospects` }
+        ],
+        `Subjunctive Triggers & Discourse Markers`,
+        `Expressions of necessity ("Il faut que...") and opinion ("Bien que...") trigger the subjunctive mood in formal essays.`,
+        [
+          { spk: `Débat A`, line: `Étudier à l'étranger offre une grande ouverture culturelle.`, en: `Studying abroad offers broad cultural exposure.` },
+          { spk: `Débat B`, line: `Cependant, le coût de la vie reste un défi majeur pour les familles.`, en: `However, the cost of living remains a major challenge for families.` }
+        ],
+        `Selon un article récent, les jeunes diplômés bilingues trouvent plus rapidement un emploi qualifié.`,
+        `Write one argument for and one argument against studying abroad using "D'un côté" and "Cependant".`
+      ),
+      makeLesson(`fr`, 4, 2, `Press & Idioms`, `Reading French Press & Everyday Idioms`, `O/L Extension`, `A/L Unit 5`,
+        [
+          { term: `Coûter les yeux de la tête`, pron: `koo-tay lay zyuh`, en: `To cost an arm and a leg` },
+          { term: `Avoir le cœur sur la main`, pron: `ah-vwahr luh kuhr`, en: `To be very generous` },
+          { term: `La transition écologique`, pron: `lah trahn-zee-syohn`, en: `The green transition` },
+          { term: `En somme`, pron: `ahn sohm`, en: `In summary` }
+        ],
+        `Relative Pronouns (qui, que, dont, où)`,
+        `Connect complex clauses smoothly: "L'université où j'étudie" (where), "le projet dont je parle" (of which).`,
+        [
+          { spk: `Journaliste`, line: `Les énergies renouvelables transforment l'économie insulaire.`, en: `Renewable energies are transforming the island economy.` },
+          { spk: `Analyste`, line: `C'est un secteur qui attire de nombreux ingénieurs.`, en: `It is a sector that attracts many engineers.` }
+        ],
+        `Bien que les défis climatiques soient urgents, l'innovation locale apporte des solutions durables.`,
+        `Combine two short sentences about Sri Lankan education using "qui" or "où".`
+      ),
+      makeLesson(`fr`, 5, 1, `Business Proposals`, `Export Pitch: Promoting Ceylon Tea & Spices`, `O/L Mastery`, `A/L Unit 7`,
+        [
+          { term: `La valeur ajoutée`, pron: `lah vah-luhr ah-zhoo-tay`, en: `Added value` },
+          { term: `La cannelle de Ceylan`, pron: `lah kah-nel`, en: `Ceylon cinnamon` },
+          { term: `Le commerce équitable`, pron: `luh koh-mehrss ay-kee-tahbl`, en: `Fair trade` },
+          { term: `Nous vous proposons un partenariat`, pron: `noo voo proh-poh-zohn`, en: `We propose a partnership` }
+        ],
+        `Conditional Mood for Polite Proposals`,
+        `Use conditional forms ("Nous souhaiterions...", "Pourriez-vous...") to sound diplomatic in export negotiations.`,
+        [
+          { spk: `Exportateur`, line: `Notre thé de Nuwara Eliya garantit une traçabilité complète et biologique.`, en: `Our Nuwara Eliya tea guarantees full organic traceability.` },
+          { spk: `Acheteur`, line: `Nous serions ravis d'examiner vos échantillons dès cette semaine.`, en: `We would be delighted to review your samples this week.` }
+        ],
+        `Proposition commerciale : L'entreprise Serendib Export propose des coffrets de thé noir et d'épices certifiés aux distributeurs européens.`,
+        `Draft a 3-sentence formal business pitch promoting Ceylon tea or cinnamon to a French buyer.`
+      ),
+      makeLesson(`fr`, 5, 2, `Interviews & Exam Prep`, `Mock Job Interview & G.C.E. A/L Essay Synthesis`, `O/L Mastery`, `A/L Exam Prep`,
+        [
+          { term: `Mes points forts`, pron: `may pwan fohr`, en: `My strengths` },
+          { term: `La gestion du temps`, pron: `lah zhess-tyohn dyu tahn`, en: `Time management` },
+          { term: `En conclusion`, pron: `ahn kohn-klyu-zyohn`, en: `In conclusion` },
+          { term: `Je reste à votre disposition`, pron: `zhuh rehst`, en: `I remain at your disposal` }
+        ],
+        `Register Control & Translation Accuracy`,
+        `Avoid literal word-for-word translation from English; preserve natural French collocations ("prendre une décision", not "faire une décision").`,
+        [
+          { spk: `Recruteur`, line: `Pourquoi souhaitez-vous rejoindre notre équipe internationale?`, en: `Why do you wish to join our international team?` },
+          { spk: `Candidat`, line: `Ma maîtrise du français et mon expérience associative seraient un atout réel.`, en: `My command of French and community experience would be a genuine asset.` }
+        ],
+        `Épreuve de synthèse : Analysez les avantages du tourisme durable dans les régions montagneuses du Sri Lanka.`,
+        `Answer the interview question "Quel est votre plus grand atout ?" in formal French.`
+      ),
+
+      // ---------------- GERMAN ----------------
+      makeLesson(`de`, 1, 1, `Alphabets & Greetings`, `Hallo! Umlauts, Eszett & Greetings`, `O/L Unit 1`, `A/L Foundation`,
+        [
+          { term: `Guten Morgen`, pron: `GOO-ten MOR-gen`, en: `Good morning` },
+          { term: `Guten Tag`, pron: `GOO-ten TAHK`, en: `Good day / Hello` },
+          { term: `Wie geht es Ihnen?`, pron: `vee gayt es EE-nen`, en: `How are you? (formal)` },
+          { term: `Danke schön`, pron: `DAHN-kuh shuhn`, en: `Thank you kindly` },
+          { term: `Auf Wiedersehen`, pron: `owf VEE-der-zay-en`, en: `Goodbye` }
+        ],
+        `Umlauts (ä, ö, ü), ß & Noun Capitalisation`,
+        `Every German noun starts with a capital letter (der Name, das Buch). The Eszett (ß) represents a sharp "ss" sound after long vowels (Straße).`,
+        [
+          { spk: `Sithum`, line: `Guten Morgen, Frau Weber! Wie geht es Ihnen?`, en: `Good morning, Mrs Weber! How are you?` },
+          { spk: `Frau Weber`, line: `Guten Morgen, Sithum! Mir geht es sehr gut, danke.`, en: `Good morning, Sithum! I am very well, thank you.` }
+        ],
+        `Hallo! Ich heiße Sithum und wohne in Matara. Ich lerne Deutsch in der Schule.`,
+        `Write three German nouns with capital letters and greet your teacher formally.`
+      ),
+      makeLesson(`de`, 1, 2, `Numbers, Dates & Family`, `Zahlen, Datum und Meine Familie`, `O/L Unit 2`, `A/L Foundation`,
+        [
+          { term: `Eins / Zwei / Drei`, pron: `eyens / tsvye / dry`, en: `One / Two / Three` },
+          { term: `Die Mutter / Der Vater`, pron: `dee MOO-ter / dair FAH-ter`, en: `The mother / The father` },
+          { term: `Die Geschwister`, pron: `dee geh-SHVIS-ter`, en: `The siblings` },
+          { term: `Grün / Gelb`, pron: `gryun / gelp`, en: `Green / Yellow` }
+        ],
+        `Three Genders (der, die, das)`,
+        `German nouns use der (masculine), die (feminine/plural), or das (neuter). Always learn the article together with the noun.`,
+        [
+          { spk: `Lukas`, line: `Hast du Geschwister, Anuki?`, en: `Do you have siblings, Anuki?` },
+          { spk: `Anuki`, line: `Ja, ich habe einen Bruder und eine Schwester.`, en: `Yes, I have one brother and one sister.` }
+        ],
+        `Heute ist der vierundzwanzigste November. Meine Familie trinkt am Nachmittag Tee.`,
+        `Write two sentences naming your family members and using "der", "die", or "das".`
+      ),
+      makeLesson(`de`, 2, 1, `Self-Introduction & Routine`, `Alltag in Sri Lanka & Self-Introduction`, `O/L Unit 4`, `A/L Core`,
+        [
+          { term: `Ich komme aus Sri Lanka`, pron: `ikh KOM-uh ows...`, en: `I come from Sri Lanka` },
+          { term: `Ich stehe um sechs Uhr auf`, pron: `ikh SHTAY-uh...`, en: `I wake up at 6 o'clock` },
+          { term: `Mein Lieblingsfach`, pron: `mine LEEP-lings-fakh`, en: `My favourite school subject` },
+          { term: `Am Wochenende`, pron: `am VOKH-en-en-duh`, en: `At the weekend` }
+        ],
+        `Verb-Second (V2) & Separable Verbs`,
+        `The conjugated verb is always the 2nd idea in a main clause. Separable prefixes move to the end: "Ich stehe früh auf."`,
+        [
+          { spk: `Ruwan`, line: `Hallo Hannah! Ich bin Ruwan und gehe in Colombo zur Schule.`, en: `Hi Hannah! I am Ruwan and go to school in Colombo.` },
+          { spk: `Hannah`, line: `Cool! Was ist dein Lieblingsfach?`, en: `Cool! What is your favourite subject?` }
+        ],
+        `Jeden Tag lerne ich Mathematik, Naturwissenschaften und Deutsch. Am Nachmittag spiele ich Badminton.`,
+        `Describe your morning routine in German using one separable verb such as "aufstehen".`
+      ),
+      makeLesson(`de`, 2, 2, `Food & Shopping`, `Essen und Einkaufen`, `O/L Unit 5`, `A/L Core`,
+        [
+          { term: `Was kostet das?`, pron: `vas KOS-tet das`, en: `How much does that cost?` },
+          { term: `Ich möchte bitte...`, pron: `ikh MUKH-tuh BIT-uh`, en: `I would like ... please` },
+          { term: `Das Obst / Das Gemüse`, pron: `das ohpst / das geh-MYU-zuh`, en: `The fruit / The vegetables` },
+          { term: `Zahlen, bitte`, pron: `TSAH-len BIT-uh`, en: `The bill, please` }
+        ],
+        `Accusative Case After "haben" & "möchten"`,
+        `Masculine "der" changes to "den" (and "ein" to "einen") as a direct object: "Ich möchte einen Tee."`,
+        [
+          { spk: `Kundin`, line: `Guten Tag, ich möchte einen Becher frischen Mangosaft.`, en: `Good day, I would like a glass of fresh mango juice.` },
+          { spk: `Verkäufer`, line: `Gern! Das macht dreihundert Rupien.`, en: `Gladly! That comes to 300 rupees.` }
+        ],
+        `Auf dem Wochenmarkt kaufen wir frische Papayas, Zimt und schwarzen Ceylon-Tee.`,
+        `Write a polite restaurant or shop order using "Ich möchte einen/eine/ein...".`
+      ),
+      makeLesson(`de`, 3, 1, `Tenses & Opinions`, `Perfekt, Zukunft & Gefühle ausdrücken`, `O/L Unit 8`, `A/L Bridge`,
+        [
+          { term: `Ich habe besucht`, pron: `ikh HAH-buh beh-ZOOKHT`, en: `I visited` },
+          { term: `Ich bin gereist`, pron: `ikh bin geh-RYST`, en: `I travelled` },
+          { term: `Meiner Meinung nach`, pron: `MY-ner MY-nung nakh`, en: `In my opinion` },
+          { term: `Ich freue mich auf...`, pron: `ikh FROY-uh mikh owf`, en: `I am looking forward to...` }
+        ],
+        `Perfekt with "haben" vs "sein"`,
+        `Verbs of movement or state change (gehen, fahren, reisen) form the past with "sein" (Ich bin nach Kandy gefahren).`,
+        [
+          { spk: `Kasun`, line: `Letztes Jahr bin ich nach Ella gefahren. Die Landschaft war herrlich!`, en: `Last year I travelled to Ella. The scenery was wonderful!` },
+          { spk: `Mia`, line: `Das klingt toll! Nächsten Monat werde ich auch dorthin reisen.`, en: `That sounds great! Next month I will travel there too.` }
+        ],
+        `Gestern haben wir im Unterricht über unsere Hobbys diskutiert. Ich war sehr begeistert.`,
+        `Write two sentences about a place you visited using "Ich bin ... gefahren" or "Ich habe ... besucht".`
+      ),
+      makeLesson(`de`, 3, 2, `Cultural Email`, `E-Mail über Vesak & Esala Perahera`, `O/L Exam Prep`, `A/L Reading`,
+        [
+          { term: `Das Vesak-Fest`, pron: `das VEH-sahk fest`, en: `The Vesak festival` },
+          { term: `Die bunten Laternen`, pron: `dee BUN-ten lah-TEHR-nen`, en: `The colourful lanterns` },
+          { term: `Die Tradition`, pron: `dee trah-dee-TSYOHN`, en: `The tradition` },
+          { term: `Viele Grüße`, pron: `FEE-luh GRYU-suh`, en: `Best regards` }
+        ],
+        `Subordinate Clauses with "weil" & "dass"`,
+        `Conjunctions like "weil" (because) and "dass" (that) send the conjugated verb to the very end of the clause.`,
+        [
+          { spk: `E-Mail`, line: `Lieber Jonas, ich schreibe dir, weil bald das Vesak-Fest beginnt.`, en: `Dear Jonas, I am writing to you because the Vesak festival begins soon.` },
+          { spk: `Detail`, line: `Alle Straßen sind hell, weil viele Familien Laternen basteln.`, en: `All the streets are bright because many families craft lanterns.` }
+        ],
+        `Im August findet in Kandy die berühmte Esala Perahera mit Tänzern und Musikern statt.`,
+        `Explain why you enjoy a Sri Lankan festival using a clause starting with "weil...".`
+      ),
+      makeLesson(`de`, 4, 1, `Registers & Debates`, `Auslandsstudium: Vor- und Nachteile`, `O/L Extension`, `A/L Unit 3`,
+        [
+          { term: `Einerseits / Andererseits`, pron: `EYE-ner-zyts`, en: `On one hand / On the other hand` },
+          { term: `Die Berufschancen`, pron: `dee beh-ROOFS-shahn-sen`, en: `Career opportunities` },
+          { term: `Das Heimweh`, pron: `das HYME-vay`, en: `Homesickness` },
+          { term: `Siezen vs. Duzen`, pron: `ZEE-tsen / DOO-tsen`, en: `Using formal Sie vs. informal du` }
+        ],
+        `Formal Register (Sie) & Connectors`,
+        `Use "deshalb" (therefore) with V2 inversion, and "obwohl" (although) to send the verb to the end.`,
+        [
+          { spk: `Pro`, line: `Ein Studium in Deutschland verbessert die technischen Sprachkenntnisse.`, en: `Studying in Germany improves technical language skills.` },
+          { spk: `Kontra`, line: `Allerdings vermisst man oft die eigene Familie und Kultur.`, en: `However, one often misses one's own family and culture.` }
+        ],
+        `Obwohl ein Stipendium hilfreich ist, erfordert das Leben im Ausland viel Selbstständigkeit.`,
+        `Write one balanced debate sentence on studying abroad using "Einerseits ... andererseits...".`
+      ),
+      makeLesson(`de`, 4, 2, `Newspapers & Idioms`, `Zeitungsartikel & Redewendungen`, `O/L Extension`, `A/L Unit 5`,
+        [
+          { term: `Die Daumen drücken`, pron: `dee DOW-men DRYU-ken`, en: `To cross one's fingers (wish luck)` },
+          { term: `Alles in Butter`, pron: `AH-les in BOO-ter`, en: `Everything is fine` },
+          { term: `Die Nachhaltigkeit`, pron: `dee NAKH-hal-tikh-kyte`, en: `Sustainability` },
+          { term: `Zusammenfassend`, pron: `tsoo-ZAH-men-fah-sent`, en: `Summarising` }
+        ],
+        `Passive Voice in Journalism`,
+        `Newspaper reports frequently use passive forms: "Solaranlagen werden in Schulen installiert."`,
+        [
+          { spk: `Bericht`, line: `Immer mehr Schulen fördern digitale Lernmethoden.`, en: `More and more schools promote digital learning methods.` },
+          { spk: `Freund`, line: `Für deine A/L-Prüfung drücke ich dir fest die Daumen!`, en: `I'm keeping my fingers crossed for your A/L exam!` }
+        ],
+        `Im Leitartikel wird betont, dass Fremdsprachen für den internationalen Handel entscheidend sind.`,
+        `Use one German idiom in a motivating sentence for a classmate taking their O/L exams.`
+      ),
+      makeLesson(`de`, 5, 1, `Business Proposals`, `Exportpräsentation: Ceylon-Tee & Gewürze`, `O/L Mastery`, `A/L Unit 7`,
+        [
+          { term: `Hochwertige Qualität`, pron: `HOKH-vehr-ti-guh`, en: `High-grade quality` },
+          { term: `Der Ceylon-Zimt`, pron: `dair TSY-lon tsimt`, en: `Ceylon cinnamon` },
+          { term: `Die Lieferkette`, pron: `dee LEE-fer-ket-uh`, en: `The supply chain` },
+          { term: `Wir unterbreiten Ihnen ein Angebot`, pron: `veer un-ter-BRY-ten...`, en: `We submit an offer to you` }
+        ],
+        `Konjunktiv II for Business Diplomacy`,
+        `Use "Wir würden gern..." (We would gladly...) and "Könnten Sie..." (Could you...) in formal B2B proposals.`,
+        [
+          { spk: `Anbieter`, line: `Unser handgepflückter Ceylon-Tee erfüllt höchste europäische Bio-Standards.`, en: `Our hand-picked Ceylon tea meets the highest European organic standards.` },
+          { spk: `Partner`, line: `Könnten Sie uns eine Preisliste für den Großhandel zusenden?`, en: `Could you send us a wholesale price list?` }
+        ],
+        `Geschäftsvorschlag: Die Firma Lanka Spice GmbH sucht langfristige Importpartner in Hamburg und München.`,
+        `Write a 3-sentence German commercial pitch highlighting Ceylon tea or spices.`
+      ),
+      makeLesson(`de`, 5, 2, `Interviews & Exam Prep`, `Vorstellungsgespräch & Übersetzung`, `O/L Mastery`, `A/L Exam Prep`,
+        [
+          { term: `Die Teamfähigkeit`, pron: `dee TEEM-fay-ikh-kyte`, en: `Teamwork ability` },
+          { term: `Zuverlässig`, pron: `TSOO-fer-les-ikh`, en: `Reliable` },
+          { term: `Berufserfahrung`, pron: `beh-ROOFS-er-fah-rung`, en: `Work experience` },
+          { term: `Mit freundlichen Grüßen`, pron: `mit FROYNT-likh-en GRYU-sen`, en: `Yours sincerely` }
+        ],
+        `Formal Translation & Nominalisation`,
+        `Academic German favours noun phrases ("die Förderung der Bildung" instead of verbs alone).`,
+        [
+          { spk: `Interviewer`, line: `Welche Stärken bringen Sie für diese Position mit?`, en: `What strengths do you bring to this position?` },
+          { spk: `Bewerberin`, line: `Ich arbeite strukturiert, bin zuverlässig und spreche drei Sprachen.`, en: `I work methodically, am reliable, and speak three languages.` }
+        ],
+        `Prüfungsaufgabe: Übersetzen Sie den folgenden Absatz über den Ausbau des Sprachunterrichts präzise ins Deutsche.`,
+        `Respond in formal German to "Warum möchten Sie bei uns arbeiten?"`
+      ),
+
+      // ---------------- JAPANESE ----------------
+      makeLesson(`ja`, 1, 1, `Hiragana, Katakana & Greetings`, `あいうえお & Essential Greetings`, `O/L Unit 1`, `A/L Foundation`,
+        [
+          { term: `おはようございます (Ohayō gozaimasu)`, pron: `oh-hah-yoh go-zah-ee-mahs`, en: `Good morning (polite)` },
+          { term: `こんにちは (Konnichiwa)`, pron: `kohn-nee-chee-wah`, en: `Hello / Good afternoon` },
+          { term: `ありがとうございます (Arigatō gozaimasu)`, pron: `ah-ree-gah-toh go-zah-ee-mahs`, en: `Thank you very much` },
+          { term: `すみません (Sumimasen)`, pron: `soo-mee-mah-sen`, en: `Excuse me / Sorry` },
+          { term: `さようなら (Sayōnara)`, pron: `sah-yoh-nah-rah`, en: `Goodbye` }
+        ],
+        `Hiragana vs. Katakana & Particle は (wa)`,
+        `Hiragana writes native words and grammar; Katakana writes foreign names like スリランカ (Suriranka). Topic marker は is written "ha" but pronounced "wa".`,
+        [
+          { spk: `Dilshan`, line: `おはようございます、先生！`, en: `Good morning, Teacher!` },
+          { spk: `Sensei`, line: `おはようございます。げんきですか。`, en: `Good morning. Are you well?` }
+        ],
+        `わたしは スリランカの がくせいです。にほんごを べんきょうします。`,
+        `Write your name in Katakana and greet a Japanese teacher politely.`
+      ),
+      makeLesson(`ja`, 1, 2, `Numbers, Kanji & Family`, `数字・漢字・家族 (Numbers, Kanji & Family)`, `O/L Unit 2`, `A/L Foundation`,
+        [
+          { term: `いち / に / さん (一・二・三)`, pron: `ichi / ni / san`, en: `One / Two / Three` },
+          { term: `かぞく (家族)`, pron: `ka-zo-ku`, en: `Family` },
+          { term: `おかあさん / おとうさん`, pron: `o-kaa-san / o-too-san`, en: `Mother / Father` },
+          { term: `あお / あか (青・赤)`, pron: `ao / aka`, en: `Blue / Red` },
+          { term: `きょう (今日)`, pron: `kyō`, en: `Today` }
+        ],
+        `Kanji Readings: On'yomi & Kun'yomi`,
+        `Kanji have Chinese-origin readings (On'yomi, e.g. 日 = ニチ) used in compounds (日本語) and native readings (Kun'yomi, e.g. ひ) used alone.`,
+        [
+          { spk: `Kenji`, line: `きょうは なんにちですか。`, en: `What day of the month is it today?` },
+          { spk: `Senuri`, line: `にじゅうよっかです。わたしの かぞくは よにんです。`, en: `It is the 24th. My family has four people.` }
+        ],
+        `わたしの ちちは エンジニアです。ははは せんせいです。`,
+        `State how many people are in your family using "わたしの かぞくは ... にんです".`
+      ),
+      makeLesson(`ja`, 2, 1, `Self-Introduction & Exchange`, `じこしょうかい (Self-Introduction with a Japanese Peer)`, `O/L Unit 4`, `A/L Core`,
+        [
+          { term: `はじめまして (Hajimemashite)`, pron: `ha-ji-me-ma-shi-te`, en: `Nice to meet you` },
+          { term: `スリランカから きました`, pron: `Su-ri-ran-ka ka-ra ki-ma-shi-ta`, en: `I came from Sri Lanka` },
+          { term: `どうぞ よろしく おねがいします`, pron: `doo-zo yo-ro-shi-ku`, en: `Pleased to meet you` },
+          { term: `まいにち (毎日)`, pron: `mai-ni-chi`, en: `Every day` }
+        ],
+        `Polite Present Verbs (-ます Form)`,
+        `Polite affirmative verbs end in -ます (たべます = eat, べんきょうします = study), and negative ends in -ません.`,
+        [
+          { spk: `Malith`, line: `はじめまして。マリットです。スリランカから きました。`, en: `Nice to meet you. I am Malith. I came from Sri Lanka.` },
+          { spk: `Yuki`, line: `はじめまして、ゆきです。まいにち なにを べんきょうしますか。`, en: `Nice to meet you, I am Yuki. What do you study every day?` }
+        ],
+        `わたしは まいあさ ろくじに おきます。がっこうで にほんごを べんきょうします。`,
+        `Write a 3-line Japanese jikoshōkai (self-introduction) with Hajimemashite and Yoroshiku.`
+      ),
+      makeLesson(`ja`, 2, 2, `Food & Shopping`, `かいものと たべもの (Shopping & Food)`, `O/L Unit 5`, `A/L Core`,
+        [
+          { term: `いくらですか`, pron: `i-ku-ra desu ka`, en: `How much is it?` },
+          { term: `これを ください`, pron: `ko-re o ku-da-sai`, en: `Please give me this` },
+          { term: `おいしいです`, pron: `o-i-shii desu`, en: `It is delicious` },
+          { term: `こうちゃ (紅茶)`, pron: `koo-cha`, en: `Black tea` }
+        ],
+        `Object Particle を (o) & Counters`,
+        `Use を after the direct object ("こうちゃを のみます" = drink black tea) and ください to request an item.`,
+        [
+          { spk: `Customer`, line: `すみません、この セイロンこうちゃは いくらですか。`, en: `Excuse me, how much is this Ceylon black tea?` },
+          { spk: `Shopkeeper`, line: `ごひゃくルピーです。とても おいしいですよ。`, en: `It is 500 rupees. It is very delicious!` }
+        ],
+        `スリランカの カレーと こうちゃは とても ゆうめいです。`,
+        `Order a drink or snack politely in Japanese using "...を ください".`
+      ),
+      makeLesson(`ja`, 3, 1, `Tenses & Feelings`, `過去形・予定・気持ち (Past, Plans & Feelings)`, `O/L Unit 8`, `A/L Bridge`,
+        [
+          { term: `いきました (行きました)`, pron: `i-ki-ma-shi-ta`, en: `Went (past)` },
+          { term: `たのしかったです`, pron: `ta-no-shi-kat-ta desu`, en: `It was fun` },
+          { term: `〜と おもいます`, pron: `to o-mo-i-ma-su`, en: `I think that...` },
+          { term: `うれしいです`, pron: `u-re-shii desu`, en: `I am happy` }
+        ],
+        `Past Polite (-ました) & Expressing Opinions`,
+        `Change -ます to -ました for past actions, and -い adjectives to -かったです (たのしかったです = was fun). Use 〜とおもいます for opinions.`,
+        [
+          { spk: `Nethmi`, line: `きのう キャンディへ いきました。とても きれいだと おもいます。`, en: `Yesterday I went to Kandy. I think it is very beautiful.` },
+          { spk: `Haruto`, line: `いいですね！らいしゅう わたしも いく つもりです。`, en: `That's great! Next week I also plan to go.` }
+        ],
+        `きょねん、ともだちと にほんの えいがを みました。とても かんどうしました。`,
+        `Write one sentence about yesterday using -ました and one opinion using 〜とおもいます.`
+      ),
+      makeLesson(`ja`, 3, 2, `Cultural Email`, `メール：ウェサックと ペラヘラ祭り`, `O/L Exam Prep`, `A/L Reading`,
+        [
+          { term: `おまつり (お祭り)`, pron: `o-ma-tsu-ri`, en: `Festival` },
+          { term: `ちょうちん (提灯)`, pron: `chō-chin`, en: `Lanterns` },
+          { term: `でんとうてきな おどり`, pron: `den-too-te-ki-na o-do-ri`, en: `Traditional dance` },
+          { term: `また れんらくします`, pron: `ma-ta ren-ra-ku shi-ma-su`, en: `I will contact you again` }
+        ],
+        `Email Greetings & Reason Particle から`,
+        `Start emails with "[Name]さんへ" and explain reasons with 〜から (because): "ちょうちんが きれいですから".`,
+        [
+          { spk: `Email`, line: `さくらさんへ。ごがつに スリランカで ウェサックという おまつりが あります。`, en: `Dear Sakura, in May there is a festival called Vesak in Sri Lanka.` },
+          { spk: `Detail`, line: `まちじゅうに うつくしい ちょうちんが かざられます。`, en: `Beautiful lanterns are decorated all across the town.` }
+        ],
+        `ハチガツの ペラヘラまつりでは、伝統的な たいこと おどりを みる ことが できます。`,
+        `Write a 3-sentence message inviting a Japanese friend to see Vesak lanterns.`
+      ),
+      makeLesson(`ja`, 4, 1, `Registers & Debates`, `留学の メリットと デメリット (Study Abroad Debate)`, `O/L Extension`, `A/L Unit 3`,
+        [
+          { term: `いっぽうで (一方で)`, pron: `ip-pō de`, en: `On the other hand` },
+          { term: `けいけんを つむ`, pron: `kei-ken o tsu-mu`, en: `To gain experience` },
+          { term: `けいざいてきな ふたん`, pron: `kei-zai-te-ki-na fu-tan`, en: `Financial burden` },
+          { term: `けいご (敬語)`, pron: `kei-go`, en: `Honorific / Formal speech` }
+        ],
+        `Plain vs. Polite vs. Honorific Registers`,
+        `Use plain forms (〜だ/〜る) inside essays and quotes, polite -ます with classmates/teachers, and Keigo (いらっしゃいます) in formal business.`,
+        [
+          { spk: `Debate A`, line: `りゅうがくは じりつしんを やしなう よい きかいだと おもいます。`, en: `I think studying abroad is a good opportunity to build independence.` },
+          { spk: `Debate B`, line: `いっぽうで、ひようが たかいという もんだいも あります。`, en: `On the other hand, there is also the problem that costs are high.` }
+        ],
+        `しんぶんの きじによると、にほんごが できる じんざいの じゅようが たかまっています。`,
+        `Write one advantage and one challenge of studying abroad in Japanese using 一方で.`
+      ),
+      makeLesson(`ja`, 4, 2, `News & Idioms`, `新聞記事と 慣用句 (Newspaper Reading & Idioms)`, `O/L Extension`, `A/L Unit 5`,
+        [
+          { term: `さるも きから おちる`, pron: `sa-ru mo ki ka-ra o-chi-ru`, en: `Even monkeys fall from trees (anyone makes mistakes)` },
+          { term: `いっせきにちょう (一石二鳥)`, pron: `is-se-ki ni-chō`, en: `Two birds with one stone` },
+          { term: `きじ (記事)`, pron: `ki-ji`, en: `Newspaper article` },
+          { term: `つまり`, pron: `tsu-ma-ri`, en: `In other words` }
+        ],
+        `Relative Clauses Modifying Nouns`,
+        `In Japanese, modifiers always precede the noun directly: "にほんごを おしえる せんせい" (the teacher who teaches Japanese).`,
+        [
+          { spk: `News`, line: `もんぶかがくしょうは あたらしい ぎじゅつ きょういくを すいしんしています。`, en: `The Ministry of Education is promoting new technical education.` },
+          { spk: `Student`, line: `しっぱいしても、さるも きから おちるから がんばります！`, en: `Even if I fail, even monkeys fall from trees, so I'll keep trying!` }
+        ],
+        `がいこくごを まなぶ ことは、ぶんか りかいと しゅうしょくの いっせきにちょうです。`,
+        `Use 一石二鳥 (is-se-ki ni-chō) in a sentence about learning Japanese.`
+      ),
+      makeLesson(`ja`, 5, 1, `Business Proposals`, `商談プレゼン：セイロンティーの 輸出提案`, `O/L Mastery`, `A/L Unit 7`,
+        [
+          { term: `ていあん (提案)`, pron: `tei-an`, en: `Business proposal` },
+          { term: `こうひんしつ (高品質)`, pron: `kō-hin-shi-tsu`, en: `High quality` },
+          { term: `ごけんとう いただけますか`, pron: `go-ken-tō i-ta-da-ke-ma-su ka`, en: `Could you kindly consider it?` },
+          { term: `きょうりょく (協力)`, pron: `kyō-ryo-ku`, en: `Cooperation` }
+        ],
+        `Keigo Humble & Respectful Requests`,
+        `Use "ご〜いただけますか" and humble verbs ("もうしあげます") when presenting commercial proposals to Japanese clients.`,
+        [
+          { spk: `Presenter`, line: `本日は 高品質な セイロンティーの ゆしゅつに ついて ごていあん もうしあげます。`, en: `Today I would like to propose exporting high-quality Ceylon tea.` },
+          { spk: `Client`, line: `ぜひ サンプルを はいけん させて ください。`, en: `By all means, please let us inspect the samples.` }
+        ],
+        `企画書：ヌワラエリヤ産の オーガニック紅茶と スパイスを 日本の 百貨店向けに 提案いたします。`,
+        `Draft a 2-sentence polite Japanese business pitch for Ceylon tea or cinnamon.`
+      ),
+      makeLesson(`ja`, 5, 2, `Interviews & Exam Prep`, `就職面接と 試験対策 (Mock Interview & A/L Prep)`, `O/L Mastery`, `A/L Exam Prep`,
+        [
+          { term: `しぼうどうき (志望動機)`, pron: `shi-bō dō-ki`, en: `Motivation for applying` },
+          { term: `つよみ (強み)`, pron: `tsu-yo-mi`, en: `Strength` },
+          { term: `せきにんかん (責任感)`, pron: `se-ki-nin-kan`, en: `Sense of responsibility` },
+          { term: `よろしく おねがいいたします`, pron: `yo-ro-shi-ku o-ne-gai i-ta-shi-ma-su`, en: `Thank you for your consideration (formal)` }
+        ],
+        `Formal Essay & Translation Synthesis`,
+        `A/L essays require clear paragraphing (〜について、まず、つぎに、まとめ) and accurate Kanji compounds.`,
+        [
+          { spk: `Interviewer`, line: `あなたの 強みは なんですか。`, en: `What is your greatest strength?` },
+          { spk: `Candidate`, line: `わたしの 強みは せきにんかんと コミュニケーション のうりょくです。`, en: `My strengths are my sense of responsibility and communication skills.` }
+        ],
+        `ほんやく課題：教育における モバイル技術の かつように ついて 述べなさい。`,
+        `Answer "あなたの 強みは なんですか" in polite Japanese.`
+      ),
+
+      // ---------------- KOREAN ----------------
+      makeLesson(`ko`, 1, 1, `Hangul & Greetings`, `한글 기본과 인사 (Hangul Basics & Greetings)`, `O/L Unit 1`, `A/L Foundation`,
+        [
+          { term: `안녕하세요`, pron: `an-nyeong-ha-se-yo`, en: `Hello (polite)` },
+          { term: `감사합니다`, pron: `gam-sa-ham-ni-da`, en: `Thank you (formal)` },
+          { term: `반갑습니다`, pron: `ban-gap-seum-ni-da`, en: `Nice to meet you` },
+          { term: `죄송합니다`, pron: `joe-song-ham-ni-da`, en: `I am sorry` },
+          { term: `안녕히 계세요`, pron: `an-nyeong-hi gye-se-yo`, en: `Goodbye (to one staying)` }
+        ],
+        `Hangul Syllable Blocks`,
+        `Hangul letters combine into square blocks: Consonant + Vowel (가 = ㄱ+ㅏ) or Consonant + Vowel + Final Consonant/Batchim (한 = ㅎ+ㅏ+ㄴ).`,
+        [
+          { spk: `Sanduni`, line: `안녕하세요! 저는 산두니입니다.`, en: `Hello! I am Sanduni.` },
+          { spk: `Minho`, line: `반갑습니다, 산두니 씨!`, en: `Nice to meet you, Sanduni!` }
+        ],
+        `저는 스리랑카 학생입니다. 한국어를 열심히 공부합니다.`,
+        `Combine ㄱ, ㄴ, ㅁ with ㅏ and ㅗ to write three Hangul syllables and a polite greeting.`
+      ),
+      makeLesson(`ko`, 1, 2, `Numbers, Dates & Family`, `숫자, 날짜, 가족 (Numbers & Family)`, `O/L Unit 2`, `A/L Foundation`,
+        [
+          { term: `일 / 이 / 삼`, pron: `il / i / sam`, en: `1 / 2 / 3 (Sino-Korean for dates)` },
+          { term: `하나 / 둘 / 셋`, pron: `ha-na / dul / set`, en: `1 / 2 / 3 (Native Korean for counting)` },
+          { term: `어머니 / 아버지`, pron: `eo-meo-ni / a-beo-ji`, en: `Mother / Father` },
+          { term: `파란색 / 노란색`, pron: `pa-ran-saek / no-ran-saek`, en: `Blue / Yellow` }
+        ],
+        `Dual Number Systems`,
+        `Korean uses Sino-Korean numbers (일, 이, 삼) for dates, money, and minutes, and Native Korean (하나, 둘, 셋) for age and items.`,
+        [
+          { spk: `Jisu`, line: `오늘이 며칠이에요?`, en: `What date is it today?` },
+          { spk: `Kavinda`, line: `십일월 이십사일이에요. 우리 가족은 네 명이에요.`, en: `It is November 24th. My family has four people.` }
+        ],
+        `우리 집에는 아버지, 어머니, 동생 그리고 제가 있습니다.`,
+        `Write today's month and day using Sino-Korean numbers.`
+      ),
+      makeLesson(`ko`, 2, 1, `Self-Introduction & Routine`, `자기소개와 하루 일과 (Routine & Exchange Chat)`, `O/L Unit 4`, `A/L Core`,
+        [
+          { term: `스리랑카에서 왔어요`, pron: `Seu-ri-rang-ka-e-seo wa-sseo-yo`, en: `I came from Sri Lanka` },
+          { term: `일어나요`, pron: `i-reo-na-yo`, en: `Wake up` },
+          { term: `학교에 가요`, pron: `hak-gyo-e ga-yo`, en: `Go to school` },
+          { term: `취미`, pron: `chwi-mi`, en: `Hobby` }
+        ],
+        `Polite Present Ending (-아/어요)`,
+        `Attach -아요 after stems with ㅏ/ㅗ (가다 → 가요), and -어요 after other vowels (먹다 → 먹어요).`,
+        [
+          { spk: `Chathura`, line: `안녕! 나는 스리랑카에서 온 차투라야. 취미가 뭐예요?`, en: `Hi! I'm Chathura from Sri Lanka. What is your hobby?` },
+          { spk: `Soojin`, line: `제 취미는 사진 찍기와 한국 음악 듣기예요.`, en: `My hobbies are taking photos and listening to Korean music.` }
+        ],
+        `저는 매일 아침 여섯 시에 일어나요. 그리고 학교에서 친구들을 만나요.`,
+        `Write two sentences about your daily school routine using -아/어요.`
+      ),
+      makeLesson(`ko`, 2, 2, `Food & Shopping`, `음식과 쇼핑 (Food & Market Shopping)`, `O/L Unit 5`, `A/L Core`,
+        [
+          { term: `이거 얼마예요?`, pron: `i-geo eol-ma-ye-yo`, en: `How much is this?` },
+          { term: `주세요`, pron: `ju-se-yo`, en: `Please give me` },
+          { term: `맛있어요`, pron: `ma-si-sseo-yo`, en: `It is delicious` },
+          { term: `홍차`, pron: `hong-cha`, en: `Black tea` }
+        ],
+        `Object Particle -을/를 & Requesting`,
+        `Add -을 after consonants and -를 after vowels before 주세요: "실론 홍차를 주세요."`,
+        [
+          { spk: `Buyer`, line: `사장님, 이 실론 홍차 얼마예요?`, en: `Shopkeeper, how much is this Ceylon black tea?` },
+          { spk: `Seller`, line: `천 루피예요. 향이 아주 좋아요.`, en: `It is 1,000 rupees. The aroma is very good.` }
+        ],
+        `시장에서 망고와 바나나를 샀어요. 스리랑카 과일은 정말 맛있어요.`,
+        `Write a polite request to buy fruit or tea in Korean using "-을/를 주세요".`
+      ),
+      makeLesson(`ko`, 3, 1, `Tenses & Feelings`, `과거, 미래, 감정 표현 (Tenses & Feelings)`, `O/L Unit 8`, `A/L Bridge`,
+        [
+          { term: `방문했어요`, pron: `bang-mun-hae-sseo-yo`, en: `Visited (past)` },
+          { term: `갈 거예요`, pron: `gal geo-ye-yo`, en: `Will go (future)` },
+          { term: `제 생각에는`, pron: `je saeng-ga-ge-neun`, en: `In my opinion` },
+          { term: `행복해요`, pron: `haeng-bo-kae-yo`, en: `I am happy` }
+        ],
+        `Past (-았/었어요) & Future (-(으)ㄹ 거예요)`,
+        `Past uses -았/었어요 (갔어요 = went), while future intentions use -(으)ㄹ 거예요 (공부할 거예요 = will study).`,
+        [
+          { spk: `Hiruni`, line: `지난주에 갈레 요새를 방문했어요. 정말 기분이 좋았어요!`, en: `Last week I visited Galle Fort. I felt really great!` },
+          { spk: `Tae`, line: `부러워요! 내년에 저도 꼭 갈 거예요.`, en: `I envy you! Next year I will definitely go too.` }
+        ],
+        `어제 친구와 한국 영화를 봤어요. 내일은 도서관에서 시험을 준비할 거예요.`,
+        `Write one past sentence (-았/었어요) and one future sentence (-(으)ㄹ 거예요).`
+      ),
+      makeLesson(`ko`, 3, 2, `Cultural Email`, `이메일: 베삭 축제와 페라헤라`, `O/L Exam Prep`, `A/L Reading`,
+        [
+          { term: `연등`, pron: `yeon-deung`, en: `Lotus lanterns` },
+          { term: `전통 축제`, pron: `jeon-tong chuk-je`, en: `Traditional festival` },
+          { term: `초대하다`, pron: `cho-dae-ha-da`, en: `To invite` },
+          { term: `건강하세요`, pron: `geon-gang-ha-se-yo`, en: `Stay healthy (closing)` }
+        ],
+        `Email Structure & Reason Marker -기 때문에`,
+        `Explain cultural reasons clearly using -아서/어서 or -기 때문에: "연등이 아름답기 때문에 사람들이 좋아해요."`,
+        [
+          { spk: `Email`, line: `지민 씨에게, 스리랑카의 아름다운 베삭 축제를 소개하고 싶어요.`, en: `Dear Jimin, I want to introduce Sri Lanka's beautiful Vesak festival.` },
+          { spk: `Detail`, line: `밤마다 화려한 연등이 거리를 밝혀 줍니다.`, en: `Every night colourful lanterns illuminate the streets.` }
+        ],
+        `캔디의 에살라 페라헤라에서는 전통 무용과 북소리를 감상할 수 있습니다.`,
+        `Write a 3-sentence email describing Vesak lanterns to a Korean friend.`
+      ),
+      makeLesson(`ko`, 4, 1, `Registers & Debates`, `유학의 장단점과 격식체 (Study Abroad Debate)`, `O/L Extension`, `A/L Unit 3`,
+        [
+          { term: `장점 / 단점`, pron: `jang-jeom / dan-jeom`, en: `Advantage / Disadvantage` },
+          { term: `반면에`, pron: `ban-myeon-e`, en: `On the other hand` },
+          { term: `존댓말 vs. 반말`, pron: `jon-daet-mal / ban-mal`, en: `Polite speech vs. casual speech` },
+          { term: `경쟁력`, pron: `gyeong-jaeng-nyeok`, en: `Competitiveness` }
+        ],
+        `Formal Deferential (-ㅂ니다/습니다) vs. Casual`,
+        `Debates, news, and presentations use -ㅂ니다/습니다 ("생각합니다"), whereas close friends use 반말.`,
+        [
+          { spk: `Side A`, line: `해외 유학은 글로벌 경쟁력을 키우는 데 도움이 됩니다.`, en: `Studying abroad helps build global competitiveness.` },
+          { spk: `Side B`, line: `반면에 학비와 생활비 부담이 크다는 단점이 있습니다.`, en: `On the other hand, there is the drawback of high tuition and living costs.` }
+        ],
+        `최근 기사에 따르면 이중 언어 구사자의 취업률이 꾸준히 증가하고 있습니다.`,
+        `State one pro and one con of studying abroad using "반면에".`
+      ),
+      makeLesson(`ko`, 4, 2, `News & Idioms`, `신문 읽기와 속담 (News & Proverbs)`, `O/L Extension`, `A/L Unit 5`,
+        [
+          { term: `천 리 길도 한 걸음부터`, pron: `cheon li gil-do han geo-reum-bu-teo`, en: `A thousand-mile journey begins with one step` },
+          { term: `백지장도 맞들면 낫다`, pron: `baek-ji-jang-do mat-deul-myeon nat-da`, en: `Many hands make light work` },
+          { term: `디지털 전환`, pron: `di-ji-teol jeon-hwan`, en: `Digital transformation` },
+          { term: `요약하면`, pron: `yo-yak-ha-myeon`, en: `To summarise` }
+        ],
+        `Quotations (-다고 하다 / -라고 하다)`,
+        `Report newspaper statements accurately: "전문가들은 교육 투자가 중요하다고 말했습니다."`,
+        [
+          { spk: `Reporter`, line: `모바일 학습 도구가 학생들의 참여도를 높이고 있다고 합니다.`, en: `It is reported that mobile learning tools are raising student engagement.` },
+          { spk: `Teacher`, line: `천 리 길도 한 걸음부터이니 매일 조금씩 연습합시다.`, en: `Since every journey starts with one step, let's practise a little daily.` }
+        ],
+        `교육 전문가들은 학생 중심의 맞춤형 학습이 앞으로 더욱 확대될 것이라고 전망했습니다.`,
+        `Write a sentence encouraging a friend using "천 리 길도 한 걸음부터".`
+      ),
+      makeLesson(`ko`, 5, 1, `Business Proposals`, `비즈니스 제안: 실론 홍차 & 향신료 수출`, `O/L Mastery`, `A/L Unit 7`,
+        [
+          { term: `수출 제안서`, pron: `su-chul je-an-seo`, en: `Export proposal` },
+          { term: `유기농 인증`, pron: `yu-gi-nong in-jeung`, en: `Organic certification` },
+          { term: `협력 파트너십`, pron: `hyeom-nyeok pa-teu-neo-sip`, en: `Cooperative partnership` },
+          { term: `검토해 주시기 바랍니다`, pron: `geom-to-hae ju-si-gi`, en: `Please review (formal)` }
+        ],
+        `Formal Honorific Business Requests`,
+        `Use "-(으)시-" honorifics and "-(으)시기 바랍니다" in written trade proposals to Korean buyers.`,
+        [
+          { spk: `Exporter`, line: `저희는 최고급 실론 홍차와 스리랑카 계피를 공급하고자 합니다.`, en: `We wish to supply premium Ceylon black tea and Sri Lankan cinnamon.` },
+          { spk: `Buyer`, line: `제품 카탈로그와 견적서를 보내 주시면 감사하겠습니다.`, en: `We would appreciate it if you could send the catalogue and quotation.` }
+        ],
+        `사업 제안: 스리랑카 고산지대 차 농장과 한국 유통사의 직접 무역 협력을 제안합니다.`,
+        `Draft a 2-sentence formal Korean export pitch for Ceylon tea or spices.`
+      ),
+      makeLesson(`ko`, 5, 2, `Interviews & Exam Prep`, `모의 면접과 시험 대비 (Interview & Exam Prep)`, `O/L Mastery`, `A/L Exam Prep`,
+        [
+          { term: `지원 동기`, pron: `ji-won dong-gi`, en: `Reason for applying` },
+          { term: `문제 해결 능력`, pron: `mun-je hae-gyeol neung-nyeok`, en: `Problem-solving ability` },
+          { term: `성실함`, pron: `seong-sil-ham`, en: `Diligence / Sincerity` },
+          { term: `감사드립니다`, pron: `gam-sa-deu-rim-ni-da`, en: `Thank you sincerely (humble)` }
+        ],
+        `Formal Essay & Translation Coherence`,
+        `Balance subject/topic markers (은/는 vs 이/가) and maintain consistent -습니다 endings throughout exam essays.`,
+        [
+          { spk: `Interviewer`, line: `본인의 가장 큰 장점은 무엇입니까?`, en: `What is your greatest strength?` },
+          { spk: `Applicant`, line: `저의 장점은 성실함과 빠른 문제 해결 능력입니다.`, en: `My strengths are diligence and quick problem-solving ability.` }
+        ],
+        `번역 연습: 외국어 능력은 글로벌 노동 시장에서 새로운 기회를 열어 줍니다.`,
+        `Answer "본인의 가장 큰 장점은 무엇입니까?" in formal Korean.`
+      ),
+
+      // ---------------- CHINESE MANDARIN ----------------
+      makeLesson(`zh`, 1, 1, `Pinyin, Tones & Greetings`, `拼音、声调与问候 (Pinyin, Tones & Greetings)`, `O/L Unit 1`, `A/L Foundation`,
+        [
+          { term: `你好 (Nǐ hǎo)`, pron: `nee how`, en: `Hello` },
+          { term: `早上好 (Zǎoshang hǎo)`, pron: `dzow-shahng how`, en: `Good morning` },
+          { term: `谢谢 (Xièxie)`, pron: `shyeh-shyeh`, en: `Thank you` },
+          { term: `不客气 (Bú kèqi)`, pron: `boo kuh-chee`, en: `You're welcome` },
+          { term: `再见 (Zàijiàn)`, pron: `dzye-jyen`, en: `Goodbye` }
+        ],
+        `Four Tones & Third-Tone Sandhi`,
+        `Mandarin has 4 tones plus neutral tone. When two 3rd tones meet (nǐ + hǎo), the first changes to a rising 2nd tone (ní hǎo) in speech!`,
+        [
+          { spk: `Ashan`, line: `老师好！您身体好吗？`, en: `Hello Teacher! How are you?` },
+          { spk: `Lǎoshī`, line: `我很好，谢谢！`, en: `I am very well, thank you!` }
+        ],
+        `你好！我叫阿山，我是斯里兰卡学生。我学习中文。`,
+        `Write Pinyin with tone marks for "Nǐ hǎo" and "Xièxie", noting which tone each syllable carries.`
+      ),
+      makeLesson(`zh`, 1, 2, `Numbers, Dates & Family`, `数字、日期与家庭 (Numbers, Dates & Family)`, `O/L Unit 2`, `A/L Foundation`,
+        [
+          { term: `一 / 二 / 三 (yī / èr / sān)`, pron: `ee / ar / sahn`, en: `One / Two / Three` },
+          { term: `今天 (jīntiān)`, pron: `jin-tyen`, en: `Today` },
+          { term: `爸爸 / 妈妈 (bàba / māma)`, pron: `bah-bah / mah-mah`, en: `Father / Mother` },
+          { term: `蓝色 / 红色 (lánsè / hóngsè)`, pron: `lahn-suh / hong-suh`, en: `Blue / Red` }
+        ],
+        `Date Order (Year → Month → Day)`,
+        `Chinese dates always go from largest unit to smallest: 2026年11月24日 (24 November 2026).`,
+        [
+          { spk: `Lin`, line: `今天几月几号？`, en: `What is the date today?` },
+          { spk: `Ashan`, line: `今天十一月二十四号。我家有四口人。`, en: `Today is November 24th. My family has four people.` }
+        ],
+        `我有一个哥哥和一个妹妹。我们都喜欢蓝色。`,
+        `Write today's date in Chinese order (年 / 月 / 日) and name two family members.`
+      ),
+      makeLesson(`zh`, 2, 1, `Self-Introduction & Routine`, `自我介绍与日常 (Self-Introduction & Routine)`, `O/L Unit 4`, `A/L Core`,
+        [
+          { term: `我来自斯里兰卡 (Wǒ láizì Sīlǐlánkǎ)`, pron: `woh lye-dzuh...`, en: `I come from Sri Lanka` },
+          { term: `每天早上 (měitiān zǎoshang)`, pron: `may-tyen dzow-shahng`, en: `Every morning` },
+          { term: `上中文课 (shàng Zhōngwén kè)`, pron: `shahng Jong-wen kuh`, en: `Attend Chinese class` },
+          { term: `我的爱好 (wǒ de àihào)`, pron: `woh duh eye-how`, en: `My hobby` }
+        ],
+        `Time Expressions Before the Verb`,
+        `Unlike English, time words sit right before the verb or at the start: "我每天六点起床" (I at 6 o'clock get up).`,
+        [
+          { spk: `Piumi`, line: `你好李明！我叫Piumi，今年十六岁。`, en: `Hi Li Ming! My name is Piumi, I am 16 years old.` },
+          { spk: `Li Ming`, line: `很高兴认识你！你平时喜欢做什么？`, en: `Nice to meet you! What do you usually like doing?` }
+        ],
+        `我每天早上六点半起床，七点去学校。我的爱好是打板球。`,
+        `Write two sentences about your daily routine placing the time before the verb.`
+      ),
+      makeLesson(`zh`, 2, 2, `Food & Shopping`, `点菜与购物 (Food & Shopping)`, `O/L Unit 5`, `A/L Core`,
+        [
+          { term: `多少钱？(Duōshao qián?)`, pron: `dwoh-show chyen`, en: `How much money?` },
+          { term: `我要一杯红茶 (Wǒ yào yì bēi hóngchá)`, pron: `woh yow ee bay hong-chah`, en: `I want one cup of black tea` },
+          { term: `太贵了 (Tài guì le)`, pron: `tye gway luh`, en: `Too expensive` },
+          { term: `买单 (Mǎidān)`, pron: `my-dahn`, en: `Pay the bill` }
+        ],
+        `Measure Words (个, 杯, 斤)`,
+        `Always insert a measure word between a number and a noun: 一杯茶 (one cup of tea), 两个芒果 (two mangoes).`,
+        [
+          { spk: `Shopper`, line: `请问，这盒锡兰红茶多少钱？`, en: `Excuse me, how much is this box of Ceylon black tea?` },
+          { spk: `Clerk`, line: `八百卢比。质量非常好！`, en: `800 rupees. The quality is excellent!` }
+        ],
+        `周末我和妈妈去市场买水果。我们买了三个芒果和两斤香蕉。`,
+        `Write a shopping request using a number + measure word (杯 or 个) + noun.`
+      ),
+      makeLesson(`zh`, 3, 1, `Tenses & Opinions`, `过去、将来与表达看法 (Time Aspects & Opinions)`, `O/L Unit 8`, `A/L Bridge`,
+        [
+          { term: `我去过康提 (Wǒ qùguo Kāngtí)`, pron: `woh chyu-gwoh`, en: `I have been to Kandy` },
+          { term: `我觉得 (Wǒ juéde)`, pron: `woh jweh-duh`, en: `I think / feel` },
+          { term: `打算 (dǎsuàn)`, pron: `dah-swahn`, en: `Plan to` },
+          { term: `非常开心 (fēicháng kāixīn)`, pron: `fay-chahng kye-shin`, en: `Very happy` }
+        ],
+        `Aspect Particles 了 (le) & 过 (guo)`,
+        `Mandarin does not conjugate verbs; use 了 for completed events ("我写了信") and 过 for past life experience ("我去过北京").`,
+        [
+          { spk: `Roshan`, line: `上个月我去了加勒，我觉得那里风景很美！`, en: `Last month I went to Galle, I think the scenery there is very beautiful!` },
+          { spk: `Mei`, line: `真棒！明年我打算和家人一起去。`, en: `Awesome! Next year I plan to go with my family.` }
+        ],
+        `昨天我学习了新的汉字，虽然有点难，但是我很有信心。`,
+        `Share one past trip using 过 or 了 and one opinion starting with 我觉得.`
+      ),
+      makeLesson(`zh`, 3, 2, `Cultural Email`, `电子邮件：卫塞节与佛牙节`, `O/L Exam Prep`, `A/L Reading`,
+        [
+          { term: `卫塞节 (Wèisāijié)`, pron: `way-sye-jyeh`, en: `Vesak Festival` },
+          { term: `彩灯 (cǎidēng)`, pron: `tsye-dung`, en: `Colourful lanterns` },
+          { term: `热闹 (rènao)`, pron: `ruh-now`, en: `Lively / Bustling` },
+          { term: `祝好 (Zhù hǎo)`, pron: `joo how`, en: `Best wishes` }
+        ],
+        `Because/Therefore Pairs (因为……所以……)`,
+        `Chinese pairs "因为" (because) in the first clause with "所以" (therefore) in the second clause.`,
+        [
+          { spk: `Email`, line: `亲爱的张伟：下周是斯里兰卡的卫塞节，我想邀请你来体验！`, en: `Dear Zhang Wei, next week is Sri Lanka's Vesak festival, and I'd love to invite you!` },
+          { spk: `Detail`, line: `因为大家挂满彩灯，所以晚上街道非常漂亮。`, en: `Because everyone hangs colourful lanterns, the streets are very pretty at night.` }
+        ],
+        `每年八月，康提的佛牙节游行吸引着世界各地的游客。`,
+        `Write a 2-sentence email describing Vesak using 因为……所以……. `
+      ),
+      makeLesson(`zh`, 4, 1, `Registers & Debates`, `留学利弊辩论 (Study Abroad Debate)`, `O/L Extension`, `A/L Unit 3`,
+        [
+          { term: `一方面……另一方面`, pron: `yì fāngmiàn... lìng yì fāngmiàn`, en: `On one hand... on the other hand` },
+          { term: `开阔眼界 (kāikuò yǎnjiè)`, pron: `kye-kwoh yen-jyeh`, en: `Broaden horizons` },
+          { term: `经济压力 (jīngjì yālì)`, pron: `jing-jee yah-lee`, en: `Financial pressure` },
+          { term: `敬语与口语`, pron: `jìngyǔ yǔ kǒuyǔ`, en: `Formal vs. colloquial register` }
+        ],
+        `Formal Written Connectors (然而 / 此外)`,
+        `Replace spoken "可是" with formal "然而" (however), and "还有" with "此外" (furthermore) in A/L essays.`,
+        [
+          { spk: `Pro`, line: `出国留学一方面能提高语言能力，另一方面能培养独立精神。`, en: `Studying abroad improves language ability and fosters independence.` },
+          { spk: `Con`, line: `然而，高昂的学费也给部分家庭带来经济压力。`, en: `However, high tuition also brings financial pressure to some families.` }
+        ],
+        `教育专家指出，跨文化交流能力在现代职场中至关重要。`,
+        `Write one balanced Mandarin sentence on studying abroad using 一方面……另一方面.`
+      ),
+      makeLesson(`zh`, 4, 2, `News & Idioms`, `报刊阅读与成语 (News & Chengyu Idioms)`, `O/L Extension`, `A/L Unit 5`,
+        [
+          { term: `一举两得 (yìjǔ liǎngdé)`, pron: `ee-jyu lyahng-duh`, en: `Kill two birds with one stone` },
+          { term: `坚持不懈 (jiānchí búxiè)`, pron: `jyen-chr boo-shyeh`, en: `Persevere unremittingly` },
+          { term: `数字化转型`, pron: `shùzìhuà zhuǎnxíng`, en: `Digital transformation` },
+          { term: `综上所述`, pron: `zōngshàng suǒshù`, en: `In summary` }
+        ],
+        `Four-Character Chengyu Idioms`,
+        `Chengyu condense classical stories into 4 characters and elevate A/L essay quality when used accurately.`,
+        [
+          { spk: `Article`, line: `通过在线平台学习外语，既省时又高效，可谓一举两得。`, en: `Learning languages via online platforms saves time and boosts efficiency—two birds with one stone.` },
+          { spk: `Advice`, line: `只要坚持不懈，就能取得优异成绩。`, en: `As long as you persevere, you can achieve excellent results.` }
+        ],
+        `据最新报道，多语种人才在国际贸易与旅游业中需求持续增长。`,
+        `Use 一举两得 or 坚持不懈 in a sentence about exam preparation.`
+      ),
+      makeLesson(`zh`, 5, 1, `Business Proposals`, `商务提案：推广锡兰红茶与香料`, `O/L Mastery`, `A/L Unit 7`,
+        [
+          { term: `锡兰红茶与肉桂`, pron: `Xīlán hóngchá yǔ ròuguì`, en: `Ceylon black tea and cinnamon` },
+          { term: `合作方案`, pron: `hézuò fāng'àn`, en: `Cooperation proposal` },
+          { term: `品质保证`, pron: `pǐnzhì bǎozhèng`, en: `Quality assurance` },
+          { term: `期待您的回复`, pron: `qīdài nín de huífù`, en: `Looking forward to your reply` }
+        ],
+        `Formal Commercial Correspondence`,
+        `Use "贵公司" (your esteemed company) and "我方" (our side) in formal trade pitches and proposals.`,
+        [
+          { spk: `Presenter`, line: `我方希望向贵公司推介斯里兰卡有机红茶与优质香料。`, en: `Our side wishes to introduce Sri Lankan organic black tea and premium spices to your esteemed company.` },
+          { spk: `Buyer`, line: `请提供产品规格与报价单，我们将尽快评估。`, en: `Please provide product specs and a price quote; we will evaluate promptly.` }
+        ],
+        `商业企划：兰卡贸易公司拟于明年参加亚洲食品博览会，拓展高端茶叶出口渠道。`,
+        `Draft a 2-sentence business proposal to an overseas tea importer using 贵公司.`
+      ),
+      makeLesson(`zh`, 5, 2, `Interviews & Exam Prep`, `模拟面试与高考翻译 (Mock Interview & Exam Prep)`, `O/L Mastery`, `A/L Exam Prep`,
+        [
+          { term: `个人优势 (gèrén yōushì)`, pron: `guh-run yoh-shr`, en: `Personal strengths` },
+          { term: `团队合作`, pron: `tuánduì hézuò`, en: `Teamwork` },
+          { term: `职业规划`, pron: `zhíyè guīhuà`, en: `Career planning` },
+          { term: `请多指教`, pron: `qǐng duō zhǐjiào`, en: `Please advise / Thank you` }
+        ],
+        `Translation Precision & Topic-Comment Flow`,
+        `Translate abstract English nouns into clear Chinese verb-object phrases to preserve natural flow in A/L translation tasks.`,
+        [
+          { spk: `Interviewer`, line: `请谈谈您在团队合作方面的经验。`, en: `Please discuss your experience in teamwork.` },
+          { spk: `Candidate`, line: `我在校外语社担任组长，擅长跨文化沟通与统筹安排。`, en: `I served as group leader in the school language club and excel at cross-cultural communication.` }
+        ],
+        `翻译练习：掌握多种外语不仅能提升个人竞争力，还能促进国际文化交流。`,
+        `Answer "您的个人优势是什么？" in formal Mandarin.`
+      )
+    ];
+
+    const ACTIVITIES_META = [
+      { id: `mcq`, name: `Multiple Choice (MCQ)`, icon: `list-checks`, desc: `Test vocabulary and grammar recall across your active language.` },
+      { id: `matching`, name: `Word Matching`, icon: `link-2`, desc: `Pair foreign terms with their English equivalents.` },
+      { id: `flashcards`, name: `Interactive Flashcards`, icon: `layers`, desc: `Flip cards with pronunciation audio and spaced review cues.` },
+      { id: `listening`, name: `Listening Comprehension`, icon: `headphones`, desc: `Listen to simulated native audio and choose the accurate meaning.` },
+      { id: `pronunciation`, name: `Pronunciation Practice`, icon: `mic`, desc: `Play model audio and self-check phonetic stress and tones.` },
+      { id: `fillblank`, name: `Fill in the Blanks`, icon: `text-cursor-input`, desc: `Complete authentic sentences with the missing target word.` },
+      { id: `wordorder`, name: `Word Arrangement`, icon: `move-horizontal`, desc: `Assemble scrambled tokens into grammatical word order.` },
+      { id: `writing`, name: `Writing Practice`, icon: `pen-tool`, desc: `Compose level-appropriate sentences and receive instant structural feedback.` },
+      { id: `timedquiz`, name: `Timed Quiz`, icon: `timer`, desc: `Beat the 45-second clock on rapid-fire language prompts.` },
+      { id: `sentencebuild`, name: `Sentence Building`, icon: `blocks`, desc: `Construct communicative Sri Lankan context dialogues.` },
+      { id: `levelchallenge`, name: `Level Assessment Challenge`, icon: `shield-check`, desc: `Score 80%+ to unlock the next level on your roadmap.` }
+    ];
+
+    const MINIGAMES_META = [
+      { id: `vocab_challenge`, name: `1. Vocabulary Challenge`, xp: 30, desc: `Pick the accurate translation across 5 quick rounds.` },
+      { id: `word_matching`, name: `2. Word Matching`, xp: 35, desc: `Pair all 4 foreign expressions with their English meanings.` },
+      { id: `sentence_builder`, name: `3. Sentence Builder`, xp: 40, desc: `Tap shuffled words in the correct grammatical order.` },
+      { id: `listening_challenge`, name: `4. Listening Challenge`, xp: 35, desc: `Hear the spoken phrase and identify what was said.` },
+      { id: `char_recognition`, name: `5. Character Recognition`, xp: 40, desc: `Identify Hiragana/Katakana/Kanji, Hangul, Pinyin tones, or diacritics.` },
+      { id: `grammar_challenge`, name: `6. Grammar Challenge`, xp: 35, desc: `Select the grammatically sound particle, article, or verb ending.` },
+      { id: `memory_cards`, name: `7. Memory Cards`, xp: 45, desc: `Flip cards to match 4 foreign-English pairs in minimum moves.` },
+      { id: `speed_quiz`, name: `8. Speed Quiz`, xp: 50, desc: `Answer as many questions as possible in 30 seconds.` },
+      { id: `daily_challenge`, name: `9. Daily Language Challenge`, xp: 60, desc: `Mixed Sri Lankan O/L & A/L daily scenario sprint.` },
+      { id: `level_challenge`, name: `10. Level Completion Challenge`, xp: 80, desc: `Pass 4/5 checkpoint questions to unlock the next level.` }
+    ];
+
+    const BADGES_META = [
+      { id: `first_step`, name: `First Word`, desc: `Complete your first lesson`, icon: `🌱` },
+      { id: `script_explorer`, name: `Script Explorer`, desc: `Practise character & writing systems`, icon: `✍️` },
+      { id: `polyglot_spark`, name: `Polyglot Spark`, desc: `Reach 150 XP across languages`, icon: `✨` },
+      { id: `game_master`, name: `Arcade Scholar`, desc: `Win 3 mini-games`, icon: `🎮` },
+      { id: `level_climber`, name: `Level Climber`, desc: `Unlock Level 2 or higher`, icon: `🏔️` },
+      { id: `ol_al_ready`, name: `Dual Pathway`, desc: `Study in O/L and A/L modes`, icon: `🎓` }
+    ];
+
+    // =========================================================================
+    // 2. APPLICATION STATE & PERSISTENCE (notebookAppApi)
+    // =========================================================================
+    const DEFAULT_STATE = {
+      view: `home`,
+      activeLang: `fr`,
+      category: `OL`, // 'OL' | 'AL' | 'Both'
+      selectedLevel: 1,
+      selectedLessonId: `fr-L1-1`,
+      activeActivityFilter: `all`,
+      activeActivityId: `mcq`,
+      activeGameId: `vocab_challenge`,
+      profile: {
+        name: `Kavindi Perera`,
+        school: `Colombo District · Grade 11`,
+        avatar: `lotus`,
+        notifications: { dailyReminder: true, examAlerts: true, soundEffects: true }
+      },
+      goals: {
+        dailyMinutes: 25,
+        dailyLessons: 2,
+        dailyVocab: 15,
+        reminderTime: `18:30`
+      },
+      xp: 120,
+      streak: 3,
+      gamesWon: 1,
+      completedLessons: [`fr-L1-1`],
+      bookmarks: [`fr-L1-1`],
+      unlockedLevels: {
+        fr: { OL: 2, AL: 1 },
+        de: { OL: 1, AL: 1 },
+        ja: { OL: 2, AL: 1 },
+        ko: { OL: 1, AL: 1 },
+        zh: { OL: 1, AL: 1 }
+      },
+      skills: {
+        speaking: 64,
+        listening: 70,
+        reading: 76,
+        writing: 62
+      },
+      dailyTasksDone: [`vocab`],
+      badges: [`first_step`],
+      notesByLesson: {}
+    };
+
+    function cloneState(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
+    var chartInstances = {};
+    var gameRuntime = null;
+    var gameTimerId = null;
+    var appState = cloneState(DEFAULT_STATE);
+
+    async function loadAppState() {
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === `function`) {
+          const saved = await window.notebookAppApi.getAppState();
+          if (saved && typeof saved === `object`) {
+            appState = mergeDeep(cloneState(DEFAULT_STATE), saved);
+          }
+        }
+      } catch (e) {
+        // Fallback silently to default state
+      }
+    }
+
+    async function saveAppState() {
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === `function`) {
+          await window.notebookAppApi.setAppState(appState);
+        }
+      } catch (e) {
+        // Safe ignore in offline test
+      }
+    }
+
+    function mergeDeep(target, source) {
+      for (const key of Object.keys(source)) {
+        if (source[key] && typeof source[key] === `object` && !Array.isArray(source[key])) {
+          if (!target[key] || typeof target[key] !== `object`) target[key] = {};
+          mergeDeep(target[key], source[key]);
+        } else {
+          target[key] = source[key];
+        }
+      }
+      return target;
+    }
+
+    // =========================================================================
+    // 3. AUDIO & SPEECH SIMULATION (Web Speech API + Web Audio Chime)
+    // =========================================================================
+    function speakText(text, langId) {
+      const lang = LANGUAGES[langId || appState.activeLang] || LANGUAGES.fr;
+      playTone(523.25, 0.08);
+      if (`speechSynthesis` in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = lang.speechLang;
+          utter.rate = 0.92;
+          window.speechSynthesis.speak(utter);
+        } catch (e) {}
+      }
+    }
+
+    function playTone(freq, duration) {
+      if (!appState.profile.notifications.soundEffects) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = `sine`;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.06, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // =========================================================================
+    // 4. HELPERS & PROGRESS CALCULATIONS
+    // =========================================================================
+    function getEffectiveCategoryKey() {
+      return appState.category === `AL` ? `AL` : `OL`;
+    }
+
+    function getUnlockedLevel(langId, catKey) {
+      const l = appState.unlockedLevels[langId] || { OL: 1, AL: 1 };
+      if (appState.category === `Both`) return Math.max(l.OL || 1, l.AL || 1);
+      return l[catKey || getEffectiveCategoryKey()] || 1;
+    }
+
+    function getLangLessons(langId) {
+      return LESSONS.filter(x => x.lang === langId);
+    }
+
+    function getLangProgressPct(langId) {
+      const all = getLangLessons(langId);
+      if (!all.length) return 0;
+      const done = all.filter(l => appState.completedLessons.includes(l.id)).length;
+      return Math.round((done / all.length) * 100);
+    }
+
+    function getCategoryProgressPct(cat) {
+      const total = LESSONS.length;
+      const done = appState.completedLessons.length;
+      if (cat === `OL`) return Math.min(100, Math.round((done / total) * 115));
+      if (cat === `AL`) return Math.min(100, Math.round((done / total) * 85));
+      return Math.round((done / total) * 100);
+    }
+
+    function awardXP(amount, skillKey) {
+      appState.xp += amount;
+      if (skillKey && appState.skills[skillKey] !== undefined) {
+        appState.skills[skillKey] = Math.min(100, appState.skills[skillKey] + 3);
+      }
+      if (appState.xp >= 150 && !appState.badges.includes(`polyglot_spark`)) {
+        appState.badges.push(`polyglot_spark`);
+      }
+      if (appState.gamesWon >= 3 && !appState.badges.includes(`game_master`)) {
+        appState.badges.push(`game_master`);
+      }
+      saveAppState();
+      updateTopbar();
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, `&amp;`)
+        .replace(/</g, `&lt;`)
+        .replace(/>/g, `&gt;`)
+        .replace(/"/g, `&quot;`);
+    }
+
+    // =========================================================================
+    // 5. NAVIGATION & SHELL SYNC
+    // =========================================================================
+    function navigateTo(viewId) {
+      stopGameTimer();
+      appState.view = viewId;
+      saveAppState();
+      renderApp();
+      const sb = document.getElementById(`sidebar`);
+      if (sb && window.innerWidth <= 960) sb.classList.remove(`open`);
+    }
+
+    function toggleMobileNav() {
+      const sb = document.getElementById(`sidebar`);
+      if (sb) sb.classList.toggle(`open`);
+    }
+
+    function switchLanguage(langId) {
+      if (!LANGUAGES[langId]) return;
+      appState.activeLang = langId;
+      const unlocked = getUnlockedLevel(langId);
+      if (appState.selectedLevel > unlocked) appState.selectedLevel = unlocked;
+      const firstLesson = LESSONS.find(l => l.lang === langId && l.level === appState.selectedLevel) || LESSONS.find(l => l.lang === langId);
+      if (firstLesson) appState.selectedLessonId = firstLesson.id;
+      saveAppState();
+      renderApp();
+    }
+
+    function switchCategory(cat) {
+      appState.category = cat;
+      if (cat === `Both` && !appState.badges.includes(`ol_al_ready`)) {
+        appState.badges.push(`ol_al_ready`);
+      }
+      saveAppState();
+      renderApp();
+    }
+
+    function updateTopbar() {
+      const lang = LANGUAGES[appState.activeLang];
+      document.body.setAttribute(`data-lang`, lang.id);
+
+      const catLabel = appState.category === `Both` ? `O/L & A/L Dual` : appState.category === `AL` ? `G.C.E. A/L` : `G.C.E. O/L (Subject ${lang.olCode})`;
+      const subEl = document.getElementById(`topbar-subtitle`);
+      if (subEl) subEl.textContent = `${lang.name} (${lang.nativeName}) · ${catLabel}`;
+
+      const pillLang = document.getElementById(`pill-lang`);
+      const pillCat = document.getElementById(`pill-cat`);
+      const pillXp = document.getElementById(`pill-xp`);
+      const pillStreak = document.getElementById(`pill-streak`);
+      if (pillLang) pillLang.textContent = lang.name;
+      if (pillCat) pillCat.textContent = appState.category === `Both` ? `O/L + A/L` : appState.category === `AL` ? `A/L` : `O/L`;
+      if (pillXp) pillXp.textContent = `${appState.xp} XP`;
+      if (pillStreak) pillStreak.textContent = `${appState.streak}-day streak`;
+
+      const av = AVATARS.find(a => a.id === appState.profile.avatar) || AVATARS[0];
+      const avEl = document.getElementById(`sidebar-avatar`);
+      if (avEl) avEl.textContent = av.icon;
+
+      document.querySelectorAll(`.nav-btn`).forEach(btn => {
+        if (btn.dataset.view === appState.view) btn.setAttribute(`aria-current`, `page`);
+        else btn.removeAttribute(`aria-current`);
+      });
+    }
+
+    // =========================================================================
+    // 6. VIEW RENDERERS (All 12 Dashboards)
+    // =========================================================================
+    function renderApp() {
+      updateTopbar();
+      destroyCharts();
+      const root = document.getElementById(`view-root`);
+      if (!root) return;
+
+      const views = {
+        home: renderHome,
+        languages: renderLanguages,
+        category: renderCategory,
+        levels: renderLevels,
+        lessons: renderLessons,
+        activities: renderActivities,
+        games: renderGames,
+        tasks: renderTasks,
+        analytics: renderAnalytics,
+        profile: renderProfile,
+        settings: renderSettings,
+        goals: renderGoals
+      };
+
+      const renderer = views[appState.view] || renderHome;
+      root.innerHTML = renderer();
+
+      if (window.lucide && typeof window.lucide.createIcons === `function`) {
+        window.lucide.createIcons();
+      }
+      if (appState.view === `analytics`) {
+        setTimeout(initAnalyticsCharts, 30);
+      }
+      if (appState.view === `games`) {
+        initMiniGameUI();
+      }
+      if (appState.view === `activities`) {
+        initActivityUI();
+      }
+    }
+
+    // ---- 1. HOME DASHBOARD ----
+    function renderHome() {
+      const lang = LANGUAGES[appState.activeLang];
+      const av = AVATARS.find(a => a.id === appState.profile.avatar) || AVATARS[0];
+      const curLvl = getUnlockedLevel(lang.id);
+      const totalDone = appState.completedLessons.length;
+      const overallPct = Math.round((totalDone / LESSONS.length) * 100);
+      const currentLesson = LESSONS.find(l => l.id === appState.selectedLessonId) || LESSONS[0];
+      const dailyItems = getDailyTasksList();
+      const tasksCompleted = dailyItems.filter(t => appState.dailyTasksDone.includes(t.id)).length;
+
+      return `
+        <section class="card-hero">
+          <div class="split-grid" style="align-items:center;">
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+              <span class="kicker">Ayubowan, ${escapeHtml(appState.profile.name)} · ${escapeHtml(appState.profile.school)}</span>
+              <h1 class="display-title">Continue your <em>${lang.name}</em> journey today.</h1>
+              <p style="color:var(--on-surface-variant);max-width:60ch;">
+                Active pathway: <strong>${appState.category === `Both` ? `O/L & A/L Dual Track` : appState.category === `AL` ? `G.C.E. A/L Stream` : `G.C.E. O/L (Subject ${lang.olCode})`}</strong>.
+                Current level: <strong>Level ${curLvl} — ${LEVEL_META[curLvl - 1].title}</strong>.
+              </p>
+              <div class="chip-row" style="margin-top:var(--space-xs);">
+                <button class="btn btn-primary" onclick="navigateTo('lessons')">
+                  <i data-lucide="play"></i> Continue Learning: ${escapeHtml(currentLesson.title)}
+                </button>
+                <button class="btn btn-secondary" onclick="navigateTo('games')">
+                  <i data-lucide="gamepad-2"></i> Play Mini-Game
+                </button>
+              </div>
+            </div>
+
+            <div class="card-soft">
+              <div class="kicker" style="margin-bottom:var(--space-xs);">Quick Avatar Selector</div>
+              <div class="chip-row">
+                ${AVATARS.map(a => `
+                  <button class="avatar-btn ${appState.profile.avatar === a.id ? `active` : ``}"
+                    onclick="selectAvatar('${a.id}')" title="${a.label}" aria-label="Select avatar ${a.label}">
+                    ${a.icon}
+                  </button>
+                `).join(``)}
+              </div>
+              <p style="font-size:0.85rem;color:var(--on-surface-variant);margin-top:var(--space-sm);">
+                Active badge: <strong>${av.icon} ${av.label}</strong> · ${appState.badges.length} / ${BADGES_META.length} earned
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="kpi-grid" style="margin-top:var(--space-lg);">
+          <div class="card">
+            <div class="kicker">Overall Progress</div>
+            <div class="section-title tabular" style="margin-top:var(--space-xs);">${overallPct}%</div>
+            <div class="progress-track" style="margin-top:var(--space-sm);"><div class="progress-fill" style="width:${overallPct}%"></div></div>
+            <p style="font-size:0.85rem;color:var(--on-surface-variant);margin-top:var(--space-xs);">${totalDone} of ${LESSONS.length} lessons completed</p>
+          </div>
+          <div class="card">
+            <div class="kicker">Active Language</div>
+            <div class="section-title" style="margin-top:var(--space-xs);">${lang.name}</div>
+            <p style="font-size:0.85rem;color:var(--on-surface-variant);margin-top:var(--space-xs);">Level ${curLvl} · ${getLangProgressPct(lang.id)}% mastered</p>
+          </div>
+          <div class="card">
+            <div class="kicker">Daily Streak &amp; XP</div>
+            <div class="section-title tabular" style="margin-top:var(--space-xs);">${appState.xp} XP</div>
+            <p style="font-size:0.85rem;color:var(--positive);font-weight:700;margin-top:var(--space-xs);">${appState.streak}-day study streak</p>
+          </div>
+          <div class="card">
+            <div class="kicker">Today's Checklist</div>
+            <div class="section-title tabular" style="margin-top:var(--space-xs);">${tasksCompleted} / ${dailyItems.length}</div>
+            <p style="font-size:0.85rem;color:var(--on-surface-variant);margin-top:var(--space-xs);">Goal: ${appState.goals.dailyMinutes} mins/day</p>
+          </div>
+        </section>
+
+        <section class="split-grid" style="margin-top:var(--space-lg);">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);">
+              <h2 class="card-title">Daily Tasks Checklist</h2>
+              <button class="btn btn-ghost btn-sm" onclick="navigateTo('tasks')">Open Full Planner</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+              ${dailyItems.slice(0, 4).map(t => {
+                const checked = appState.dailyTasksDone.includes(t.id);
+                return `
+                  <label class="card-soft" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+                    <span style="display:flex;align-items:center;gap:var(--space-sm);font-weight:600;">
+                      <input type="checkbox" ${checked ? `checked` : ``} onchange="toggleDailyTask('${t.id}')" style="width:20px;height:20px;">
+                      <span>${escapeHtml(t.label)}</span>
+                    </span>
+                    <span class="badge ${checked ? `badge-positive` : `badge-neutral`}">+${t.xp} XP</span>
+                  </label>
+                `;
+              }).join(``)}
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);">
+              <h2 class="card-title">Recent Achievements</h2>
+              <button class="btn btn-ghost btn-sm" onclick="navigateTo('profile')">View All</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+              ${BADGES_META.filter(b => appState.badges.includes(b.id)).map(b => `
+                <div class="card-soft" style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:1.5rem;" aria-hidden="true">${b.icon}</span>
+                  <div>
+                    <div style="font-weight:700;">${b.name}</div>
+                    <div style="font-size:0.85rem;color:var(--on-surface-variant);">${b.desc}</div>
+                  </div>
+                </div>
+              `).join(``)}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    // ---- 2. LANGUAGE SELECTION DASHBOARD ----
+    function renderLanguages() {
+      return `
+        <section class="card-hero">
+          <div class="kicker">Language Management &amp; Pastel Themes</div>
+          <h1 class="display-title">Choose Your <em>Foreign Language</em></h1>
+          <p style="color:var(--on-surface-variant);margin-top:var(--space-xs);max-width:65ch;">
+            Switch seamlessly between all five G.C.E. O/L and A/L foreign languages. Each language applies its own soothing pastel workspace while preserving English explanations and high-contrast typography.
+          </p>
+        </section>
+
+        <section class="card-grid" style="margin-top:var(--space-lg);">
+          ${Object.values(LANGUAGES).map(l => {
+            const active = appState.activeLang === l.id;
+            const pct = getLangProgressPct(l.id);
+            const lvl = getUnlockedLevel(l.id);
+            return `
+              <article class="card" style="border: 2px solid ${active ? `var(--primary)` : `transparent`}; display:flex; flex-direction:column; gap:var(--space-sm);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span class="badge">O/L Code ${l.olCode}</span>
+                  <span class="badge badge-neutral">${l.themeLabel}</span>
+                </div>
+                <h2 class="section-title">${l.name} <span style="font-weight:500;color:var(--on-surface-variant);">(${l.nativeName})</span></h2>
+                <p style="font-size:0.9rem;color:var(--on-surface-variant);">${l.summary}</p>
+                <div class="card-soft" style="font-size:0.85rem;">
+                  <strong>Writing system:</strong> ${l.scriptNote}
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:700;margin-bottom:4px;">
+                    <span>Unlocked: Level ${lvl}/5</span>
+                    <span class="tabular">${pct}%</span>
+                  </div>
+                  <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+                </div>
+                <div style="margin-top:auto;padding-top:var(--space-xs);display:flex;gap:var(--space-sm);">
+                  <button class="btn ${active ? `btn-secondary` : `btn-primary`}" style="flex:1;" onclick="switchLanguage('${l.id}')">
+                    ${active ? `Active Language` : `Switch to ${l.name}`}
+                  </button>
+                  <button class="btn btn-outline btn-sm" onclick="switchLanguage('${l.id}');navigateTo('lessons');">Lessons</button>
+                </div>
+              </article>
+            `;
+          }).join(``)}
+        </section>
+      `;
+    }
+
+    // ---- 3. EDUCATIONAL CATEGORY SELECTION DASHBOARD ----
+    function renderCategory() {
+      const cats = [
+        { id: `OL`, title: `G.C.E. Ordinary Level (O/L)`, sub: `Grades 10–11 · Department of Examinations`,
+          desc: `Aligned to Category I Foreign Language subject codes (French 68, German 69, Japanese 71, Korean 73, Chinese 74). Prioritises scripts, daily dialogues, and structured letter/email writing.` },
+        { id: `AL`, title: `G.C.E. Advanced Level (A/L)`, sub: `Grades 12–13 · Academic & Career Stream`,
+          desc: `Focuses on formal vs. informal registers, persuasive debates, press comprehension, Ceylon Tea/Spices commercial pitches, and academic translation.` },
+        { id: `Both`, title: `Dual Pathway (O/L + A/L Bridge)`, sub: `Comprehensive Independent & School Track`,
+          desc: `Tracks both O/L foundational milestones and A/L upper-intermediate/professional fluency simultaneously for ambitious learners.` }
+      ];
+      return `
+        <section class="card-hero">
+          <div class="kicker">Sri Lankan National Examination Pathways</div>
+          <h1 class="display-title">Select Your <em>Educational Category</em></h1>
+          <p style="color:var(--on-surface-variant);margin-top:var(--space-xs);max-width:65ch;">
+            Independent progress tracking separates G.C.E. O/L readiness, G.C.E. A/L mastery, or a combined dual pathway.
+          </p>
+        </section>
+
+        <section class="card-grid" style="margin-top:var(--space-lg);">
+          ${cats.map(c => {
+            const active = appState.category === c.id;
+            const pct = getCategoryProgressPct(c.id);
+            return `
+              <article class="card" style="border: 2px solid ${active ? `var(--primary)` : `transparent`}; display:flex; flex-direction:column; gap:var(--space-sm);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span class="badge ${active ? `` : `badge-neutral`}">${c.id === `Both` ? `Dual Mode` : c.id}</span>
+                  <span class="tabular" style="font-weight:800;color:var(--primary);">${pct}% tracked</span>
+                </div>
+                <h2 class="card-title">${c.title}</h2>
+                <div class="kicker">${c.sub}</div>
+                <p style="font-size:0.9rem;color:var(--on-surface-variant);">${c.desc}</p>
+                <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+                <button class="btn ${active ? `btn-secondary` : `btn-primary`}" style="margin-top:auto;" onclick="switchCategory('${c.id}')">
+                  ${active ? `Selected Pathway` : `Activate ${c.id} Pathway`}
+                </button>
+              </article>
+            `;
+          }).join(``)}
+        </section>
+      `;
+    }
+
+    // ---- 4. LEVEL SELECTION DASHBOARD (5 Visually Distinguishable Levels) ----
+    function renderLevels() {
+      const lang = LANGUAGES[appState.activeLang];
+      const unlocked = getUnlockedLevel(lang.id);
+      return `
+        <section class="card-hero">
+          <div class="kicker">${lang.name} · 5-Level Curriculum Roadmap</div>
+          <h1 class="display-title">Structured Progression: <em>Levels 1–5</em></h1>
+          <p style="color:var(--on-surface-variant);margin-top:var(--space-xs);max-width:65ch;">
+            Each level carries a distinct pastel treatment with dark high-contrast typography. Pass a Level Challenge in Activities or Mini-Games—or unlock directly for study—to advance.
+          </p>
+        </section>
+
+        <section style="display:flex;flex-direction:column;gap:var(--space-md);margin-top:var(--space-lg);">
+          ${LEVEL_META.map(m => {
+            const isUnlocked = m.level <= unlocked;
+            const lvlLessons = LESSONS.filter(l => l.lang === lang.id && l.level === m.level);
+            const doneCount = lvlLessons.filter(l => appState.completedLessons.includes(l.id)).length;
+            const pct = lvlLessons.length ? Math.round((doneCount / lvlLessons.length) * 100) : 0;
+            return `
+              <article class="lvl-card lvl-${m.level}">
+                <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--space-sm);">
+                  <span class="lvl-pill">Level ${m.level} · ${m.title}</span>
+                  <span class="badge ${isUnlocked ? `badge-positive` : `badge-warning`}">
+                    <i data-lucide="${isUnlocked ? `unlock` : `lock`}"></i>
+                    ${isUnlocked ? `Unlocked` : `Assessment Locked`}
+                  </span>
+                </div>
+                <h2 class="card-title">${m.subtitle}</h2>
+                <p style="font-size:0.92rem;">${m.objectives}</p>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-md);margin-top:var(--space-xs);">
+                  <div style="flex:1;min-width:200px;">
+                    <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:700;margin-bottom:4px;">
+                      <span>${doneCount}/${lvlLessons.length} core lessons completed (${m.lessonsCount} planned topics)</span>
+                      <span class="tabular">${pct}%</span>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+                  </div>
+                  <div class="chip-row">
+                    ${isUnlocked ? `
+                      <button class="btn btn-primary btn-sm" onclick="openLevelLessons(${m.level})">Open Level ${m.level} Lessons</button>
+                    ` : `
+                      <button class="btn btn-outline btn-sm" onclick="startLevelAssessment(${m.level - 1})">Pass Level ${m.level - 1} Assessment</button>
+                      <button class="btn btn-ghost btn-sm" onclick="unlockLevelNow(${m.level})">Preview Unlock</button>
+                    `}
+                  </div>
+                </div>
+              </article>
+            `;
+          }).join(``)}
+        </section>
+      `;
+    }
+
+    // ---- 5. LESSON DASHBOARD (Language -> Category -> Level -> Topic -> Lesson) ----
+    function renderLessons() {
+      const lang = LANGUAGES[appState.activeLang];
+      const langLessons = LESSONS.filter(l => l.lang === lang.id);
+      const activeLesson = langLessons.find(l => l.id === appState.selectedLessonId) || langLessons[0];
+      const isDone = appState.completedLessons.includes(activeLesson.id);
+      const isBookmarked = appState.bookmarks.includes(activeLesson.id);
+      const savedNote = appState.notesByLesson[activeLesson.id] || ``;
+
+      return `
+        <section class="card-hero">
+          <div class="kicker">${lang.name} &rarr; ${appState.category} &rarr; Level ${activeLesson.level} &rarr; ${activeLesson.topic}</div>
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--space-md);margin-top:var(--space-xs);">
+            <h1 class="display-title">${escapeHtml(activeLesson.title)}</h1>
+            <div class="chip-row">
+              <button class="btn btn-outline btn-sm" onclick="toggleBookmark('${activeLesson.id}')">
+                <i data-lucide="bookmark"></i> ${isBookmarked ? `Bookmarked` : `Bookmark`}
+              </button>
+              <button class="btn ${isDone ? `btn-secondary` : `btn-primary`} btn-sm" onclick="completeLesson('${activeLesson.id}')">
+                <i data-lucide="check-circle"></i> ${isDone ? `Completed (+25 XP)` : `Mark Complete (+25 XP)`}
+              </button>
+            </div>
+          </div>
+
+          <div class="chip-row" style="margin-top:var(--space-md);">
+            ${langLessons.map(l => `
+              <button class="chip ${l.id === activeLesson.id ? `active` : ``}" onclick="selectLesson('${l.id}')">
+                L${l.level}.${l.idx} ${escapeHtml(l.topic)}
+              </button>
+            `).join(``)}
+          </div>
+        </section>
+
+        ${renderScriptVisualizer(lang.id)}
+
+        <section class="split-grid" style="margin-top:var(--space-lg);">
+          <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+            <article class="card">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);">
+                <h2 class="card-title">Core Vocabulary &amp; Pronunciation</h2>
+                <span class="badge">${activeLesson.olTag} · ${activeLesson.alTag}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+                ${activeLesson.vocab.map(v => `
+                  <div class="vocab-row">
+                    <strong class="${lang.id === `ko` ? `ko-text` : ``}">${escapeHtml(v.term)}</strong>
+                    <span style="font-size:0.88rem;color:var(--on-surface-variant);">/${escapeHtml(v.pron)}/</span>
+                    <span>${escapeHtml(v.en)}</span>
+                    <button class="btn btn-outline btn-sm" onclick="speakText('${escapeHtml(v.term.replace(/'/g, ` `))}', '${lang.id}')" aria-label="Listen to ${escapeHtml(v.term)}">
+                      <i data-lucide="volume-2"></i> Listen
+                    </button>
+                  </div>
+                `).join(``)}
+              </div>
+            </article>
+
+            <article class="card">
+              <h2 class="card-title">Example Dialogue (Sri Lankan Context)</h2>
+              <div style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-md);">
+                ${activeLesson.dialogue.map(d => `
+                  <div class="card-soft">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                      <span class="kicker">${escapeHtml(d.spk)}</span>
+                      <button class="btn btn-ghost btn-sm" onclick="speakText('${escapeHtml(d.line.replace(/'/g, ` `))}', '${lang.id}')">
+                        <i data-lucide="volume-2"></i> Play
+                      </button>
+                    </div>
+                    <p style="font-weight:700;margin-top:4px;" class="${lang.id === `ko` ? `ko-text` : ``}">${escapeHtml(d.line)}</p>
+                    <p style="font-size:0.9rem;color:var(--on-surface-variant);">${escapeHtml(d.en)}</p>
+                  </div>
+                `).join(``)}
+              </div>
+            </article>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:var(--space-lg);">
+            <article class="card lvl-card lvl-${activeLesson.level}">
+              <span class="lvl-pill">Grammar Focus</span>
+              <h2 class="card-title">${escapeHtml(activeLesson.grammarTitle)}</h2>
+              <p>${escapeHtml(activeLesson.grammarNote)}</p>
+            </article>
+
+            <article class="card">
+              <h2 class="card-title">Reading Practice</h2>
+              <p class="card-soft ${lang.id === `ko` ? `ko-text` : ``}" style="margin-top:var(--space-sm);font-weight:600;">
+                ${escapeHtml(activeLesson.readingText)}
+              </p>
+              <button class="btn btn-outline btn-sm" style="margin-top:var(--space-sm);" onclick="speakText('${escapeHtml(activeLesson.readingText.replace(/'/g, ` `))}', '${lang.id}')">
+                <i data-lucide="headphones"></i> Listen to Passage
+              </button>
+            </article>
+
+            <article class="card">
+              <h2 class="card-title">Guided Writing Practice</h2>
+              <p style="font-size:0.9rem;color:var(--on-surface-variant);margin-top:var(--space-xs);">${escapeHtml(activeLesson.writingPrompt)}</p>
+              <div class="field" style="margin-top:var(--space-sm);">
+                <label for="lesson-writing-box">Your ${lang.name} Response</label>
+                <textarea id="lesson-writing-box" class="input" style="border-radius:var(--rounded);min-height:92px;" placeholder="Type your response here...">${escapeHtml(savedNote)}</textarea>
+              </div>
+              <div class="chip-row" style="margin-top:var(--space-sm);">
+                <button class="btn btn-primary btn-sm" onclick="submitLessonWriting('${activeLesson.id}')">Check &amp; Save (+10 XP)</button>
+              </div>
+              <div id="lesson-writing-feedback"></div>
+            </article>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderScriptVisualizer(langId) {
+      if (langId === `ja`) {
+        const g = SCRIPT_GUIDES.ja;
+        return `
+          <section class="card" style="margin-top:var(--space-lg);">
+            <h2 class="card-title">${g.title}</h2>
+            <p style="font-size:0.9rem;color:var(--on-surface-variant);margin-top:4px;">Tap any character to hear its pronunciation and inspect stroke order guidance.</p>
+            <div class="card-grid" style="margin-top:var(--space-md);">
+              <div class="card-soft">
+                <div class="kicker">Hiragana (ひらがな)</div>
+                <div class="chip-row" style="margin-top:var(--space-sm);">
+                  ${g.hiragana.map(h => `<button class="chip" onclick="showScriptDetail('${h.ch}','Hiragana: ${h.romaji}','${escapeHtml(h.stroke)}','ja')">${h.ch} (${h.romaji})</button>`).join(``)}
+                </div>
+              </div>
+              <div class="card-soft">
+                <div class="kicker">Katakana (カタカナ)</div>
+                <div class="chip-row" style="margin-top:var(--space-sm);">
+                  ${g.katakana.map(k => `<button class="chip" onclick="showScriptDetail('${k.ch}','Katakana: ${k.romaji}','${escapeHtml(k.stroke)}','ja')">${k.ch} (${k.romaji})</button>`).join(``)}
+                </div>
+              </div>
+              <div class="card-soft">
+                <div class="kicker">Kanji (漢字 — On'yomi &amp; Kun'yomi)</div>
+                <div class="chip-row" style="margin-top:var(--space-sm);">
+                  ${g.kanji.map(kj => `<button class="chip" onclick="showScriptDetail('${kj.ch}','On: ${escapeHtml(kj.on)} | Kun: ${escapeHtml(kj.kun)}','Meaning: ${kj.meaning} — ${escapeHtml(kj.stroke)}','ja')">${kj.ch} (${kj.meaning})</button>`).join(``)}
+                </div>
+              </div>
+            </div>
+            <div id="script-detail-out" class="card-soft" style="margin-top:var(--space-md);">Select any Hiragana, Katakana, or Kanji character above to inspect stroke guidance.</div>
+          </section>
+        `;
+      }
+      if (langId === `ko`) {
+        const g = SCRIPT_GUIDES.ko;
+        return `
+          <section class="card" style="margin-top:var(--space-lg);">
+            <h2 class="card-title">${g.title}</h2>
+            <div class="card-grid" style="margin-top:var(--space-md);">
+              ${g.blocks.map(b => `
+                <button class="card-soft ko-text" style="border:2px solid var(--outline-variant);text-align:left;cursor:pointer;" onclick="speakText('${b.ch}','ko')">
+                  <div class="script-box">${b.ch} <span style="font-size:1rem;color:var(--primary);">(${b.romaji})</span></div>
+                  <div style="font-weight:700;font-size:0.88rem;">${b.parts}</div>
+                  <div style="font-size:0.82rem;color:var(--on-surface-variant);">${b.note}</div>
+                </button>
+              `).join(``)}
+            </div>
+          </section>
+        `;
+      }
+      if (langId === `zh`) {
+        const g = SCRIPT_GUIDES.zh;
+        return `
+          <section class="card" style="margin-top:var(--space-lg);">
+            <h2 class="card-title">${g.title}</h2>
+            <div class="tone-grid" style="margin-top:var(--space-md);">
+              ${g.tones.map(t => `
+                <div class="tone-card">
+                  <div class="kicker">${t.tone}</div>
+                  <div class="script-box" style="font-size:1.5rem;margin:4px 0;">${t.mark}</div>
+                  <div style="font-weight:800;color:var(--primary);">${t.contour}</div>
+                  <div style="font-size:0.82rem;color:var(--on-surface-variant);">${t.meaning} · ${t.pitch}</div>
+                </div>
+              `).join(``)}
+            </div>
+            <div class="chip-row" style="margin-top:var(--space-md);">
+              ${g.hanzi.map(h => `<button class="chip" onclick="speakText('${h.ch}','zh')">${h.ch} (${h.pinyin}, Tone ${h.tone}) — ${h.meaning} · ${h.stroke}</button>`).join(``)}
+            </div>
+          </section>
+        `;
+      }
+      return ``;
+    }
+
+    // ---- 6. ACTIVITY DASHBOARD (11 Filterable Activity Types) ----
+    function renderActivities() {
+      const lang = LANGUAGES[appState.activeLang];
+      const filter = appState.activeActivityFilter;
+      const shown = filter === `all` ? ACTIVITIES_META : ACTIVITIES_META.filter(a => a.id === filter);
+
+      return `
+        <section class="card-hero">
+          <div class="kicker">${lang.name} Interactive Practice</div>
+          <h1 class="display-title">Learning <em>Activities</em></h1>
+          <div class="chip-row" style="margin-top:var(--space-md);">
+            <button class="chip ${filter === `all` ? `active` : ``}" onclick="setActivityFilter('all')">All (11)</button>
+            ${ACTIVITIES_META.map(a => `
+              <button class="chip ${filter === a.id ? `active` : ``}" onclick="setActivityFilter('${a.id}')">${a.name}</button>
+            `).join(``)}
+          </div>
+        </section>
+
+        <section class="split-grid" style="margin-top:var(--space-lg);">
+          <div class="card-grid">
+            ${shown.map(a => `
+              <article class="card" style="border:2px solid ${appState.activeActivityId === a.id ? `var(--primary)` : `transparent`};display:flex;flex-direction:column;gap:var(--space-xs);">
+                <div style="display:flex;align-items:center;gap:var(--space-xs);color:var(--primary);font-weight:800;">
+                  <i data-lucide="${a.icon}"></i>
+                  <span>${a.name}</span>
+                </div>
+                <p style="font-size:0.88rem;color:var(--on-surface-variant);">${a.desc}</p>
+                <button class="btn btn-secondary btn-sm" style="margin-top:auto;" onclick="launchActivity('${a.id}')">Launch Activity</button>
+              </article>
+            `).join(``)}
+          </div>
+
+          <div class="card" id="activity-stage">
+            <div class="kicker">Interactive Exercise Stage</div>
+            <h2 class="card-title" id="act-stage-title">Select an activity</h2>
+            <div id="act-stage-body" style="margin-top:var(--space-md);"></div>
+          </div>
+        </section>
+      `;
+    }
+
+    // ---- 7. MINI-GAME DASHBOARD (10 Interactive Mini-Games) ----
+    function renderGames() {
+      const lang = LANGUAGES[appState.activeLang];
+      return `
+        <section class="card-hero">
+          <div class="kicker">${lang.name} Arcade · Live Scoring &amp; XP Rewards</div>
+          <h1 class="display-title">10 Language <em>Mini-Games</em></h1>
+          <div class="chip-row" style="margin-top:var(--space-md);">
+            ${MINIGAMES_META.map(g => `
+              <button class="chip ${appState.activeGameId === g.id ? `active` : ``}" onclick="selectMiniGame('${g.id}')">${g.name}</button>
+            `).join(``)}
+          </div>
+        </section>
+
+        <section class="card" style="margin-top:var(--space-lg);" id="game-arena">
+          <div id="game-arena-content"></div>
+        </section>
+      `;
+    }
+
+    // ---- 8. DAILY TASK DASHBOARD ----
+    function getDailyTasksList() {
+      const lang = LANGUAGES[appState.activeLang];
+      return [
+        { id: `vocab`, skill: `Vocabulary`, label: `Review ${appState.goals.dailyVocab} ${lang.name} vocabulary cards`, xp: 20, view: `lessons` },
+        { id: `grammar`, skill: `Grammar`, label: `Complete 1 grammar check in Level ${getUnlockedLevel(lang.id)}`, xp: 25, view: `activities` },
+        { id: `listening`, skill: `Listening`, label: `Listen to 3 dialogue lines using audio playback`, xp: 15, view: `lessons` },
+        { id: `speaking`, skill: `Speaking`, label: `Shadow 5 phrases aloud with pronunciation audio`, xp: 20, view: `activities` },
+        { id: `reading`, skill: `Reading`, label: `Read one Sri Lankan cultural passage`, xp: 20, view: `lessons` },
+        { id: `writing`, skill: `Writing`, label: `Write and check one guided paragraph`, xp: 25, view: `lessons` },
+        { id: `sentence`, skill: `Sentence Building`, label: `Win Sentence Builder mini-game`, xp: 30, view: `games` }
+      ];
+    }
+
+    function renderTasks() {
+      const tasks = getDailyTasksList();
+      const doneCount = tasks.filter(t => appState.dailyTasksDone.includes(t.id)).length;
+      const pct = Math.round((doneCount / tasks.length) * 100);
+      return `
+        <section class="card-hero">
+          <div class="kicker">Personalised Daily Targets · ${appState.goals.dailyMinutes} mins/day</div>
+          <h1 class="display-title">Daily <em>Learning Tasks</em></h1>
+          <div style="max-width:460px;margin-top:var(--space-md);">
+            <div style="display:flex;justify-content:space-between;font-weight:700;margin-bottom:4px;">
+              <span>Daily Completion</span>
+              <span class="tabular">${doneCount}/${tasks.length} (${pct}%)</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+          </div>
+        </section>
+
+        <section style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-lg);">
+          ${tasks.map(t => {
+            const done = appState.dailyTasksDone.includes(t.id);
+            return `
+              <div class="card" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-md);">
+                <label style="display:flex;align-items:center;gap:var(--space-md);cursor:pointer;flex:1;">
+                  <input type="checkbox" ${done ? `checked` : ``} onchange="toggleDailyTask('${t.id}')" style="width:22px;height:22px;">
+                  <div>
+                    <span class="badge badge-neutral">${t.skill}</span>
+                    <div style="font-weight:700;margin-top:4px;">${escapeHtml(t.label)}</div>
+                  </div>
+                </label>
+                <div class="chip-row">
+                  <span class="badge ${done ? `badge-positive` : ``}">+${t.xp} XP</span>
+                  <button class="btn btn-outline btn-sm" onclick="navigateTo('${t.view}')">Go</button>
+                </div>
+              </div>
+            `;
+          }).join(``)}
+        </section>
+      `;
+    }
+
+    // ---- 9. PROGRESS & ANALYTICS DASHBOARD ----
+    function renderAnalytics() {
+      return `
+        <section class="card-hero">
+          <div class="kicker">Performance &amp; Skill Telemetry</div>
+          <h1 class="display-title">Progress &amp; <em>Analytics</em></h1>
+          <p style="color:var(--on-surface-variant);margin-top:var(--space-xs);">
+            Track mastery across all 5 languages, O/L &amp; A/L categories, core communication skills, and earned badges.
+          </p>
+        </section>
+
+        <section class="split-grid" style="margin-top:var(--space-lg);">
+          <div class="card">
+            <h2 class="card-title">Language Completion Breakdown (%)</h2>
+            <div class="chart-box" style="margin-top:var(--space-md);"><canvas id="chart-lang-bar"></canvas></div>
+          </div>
+          <div class="card">
+            <h2 class="card-title">Skill Balance (Speaking, Listening, Reading, Writing)</h2>
+            <div class="chart-box" style="margin-top:var(--space-md);"><canvas id="chart-skill-radar"></canvas></div>
+          </div>
+        </section>
+
+        <section class="card" style="margin-top:var(--space-lg);">
+          <h2 class="card-title">Category &amp; Level Matrix</h2>
+          <div class="table-wrap" style="margin-top:var(--space-md);">
+            <table>
+              <thead>
+                <tr><th>Language</th><th>O/L Code</th><th>Unlocked O/L</th><th>Unlocked A/L</th><th>Completed Lessons</th></tr>
+              </thead>
+              <tbody>
+                ${Object.values(LANGUAGES).map(l => {
+                  const done = LESSONS.filter(x => x.lang === l.id && appState.completedLessons.includes(x.id)).length;
+                  const total = LESSONS.filter(x => x.lang === l.id).length;
+                  const ul = appState.unlockedLevels[l.id] || { OL: 1, AL: 1 };
+                  return `
+                    <tr>
+                      <td><strong>${l.name}</strong></td>
+                      <td class="tabular">${l.olCode}</td>
+                      <td class="tabular">Level ${ul.OL}/5</td>
+                      <td class="tabular">Level ${ul.AL}/5</td>
+                      <td class="tabular">${done} / ${total}</td>
+                    </tr>
+                  `;
+                }).join(``)}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      `;
+    }
+
+    function destroyCharts() {
+      Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch (e) {} });
+      chartInstances = {};
+    }
+
+    function initAnalyticsCharts() {
+      if (typeof Chart === `undefined`) return;
+      const cs = getComputedStyle(document.documentElement);
+      const dataColors = [
+        cs.getPropertyValue(`--lang-fr-accent`).trim() || `#2d5fa8`,
+        cs.getPropertyValue(`--lang-de-accent`).trim() || `#277350`,
+        cs.getPropertyValue(`--lang-ja-accent`).trim() || `#b8326a`,
+        cs.getPropertyValue(`--lang-ko-accent`).trim() || `#5d43a6`,
+        cs.getPropertyValue(`--lang-zh-accent`).trim() || `#b84a27`
+      ];
+      const primaryColor = cs.getPropertyValue(`--primary`).trim() || `#2d5fa8`;
+      const primarySoft = cs.getPropertyValue(`--primary-container`).trim() || `rgba(45, 95, 168, 0.2)`;
+      const barEl = document.getElementById(`chart-lang-bar`);
+      const radEl = document.getElementById(`chart-skill-radar`);
+      if (barEl) {
+        chartInstances.bar = new Chart(barEl, {
+          type: `bar`,
+          data: {
+            labels: Object.values(LANGUAGES).map(l => l.name),
+            datasets: [{
+              label: `Curriculum Mastery (%)`,
+              data: Object.values(LANGUAGES).map(l => getLangProgressPct(l.id)),
+              backgroundColor: dataColors,
+              borderRadius: 10
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+      }
+      if (radEl) {
+        chartInstances.rad = new Chart(radEl, {
+          type: `radar`,
+          data: {
+            labels: [`Speaking`, `Listening`, `Reading`, `Writing`],
+            datasets: [{
+              label: `Skill Score`,
+              data: [appState.skills.speaking, appState.skills.listening, appState.skills.reading, appState.skills.writing],
+              backgroundColor: primarySoft,
+              borderColor: primaryColor,
+              pointBackgroundColor: primaryColor
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100 } } }
+        });
+      }
+    }
+
+    // ---- 10. PROFILE DASHBOARD ----
+    function renderProfile() {
+      const av = AVATARS.find(a => a.id === appState.profile.avatar) || AVATARS[0];
+      const board = [
+        { name: `Tharushi S. (Kandy)`, xp: 340 },
+        { name: `Dineth R. (Galle)`, xp: 245 },
+        { name: `${appState.profile.name} (You)`, xp: appState.xp, isYou: true },
+        { name: `Nimal K. (Jaffna)`, xp: 95 }
+      ].sort((a, b) => b.xp - a.xp);
+
+      return `
+        <section class="card-hero" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-lg);">
+          <div style="display:flex;align-items:center;gap:var(--space-md);">
+            <div class="avatar-btn active" style="width:72px;height:72px;font-size:2.2rem;">${av.icon}</div>
+            <div>
+              <div class="kicker">${escapeHtml(appState.profile.school)}</div>
+              <h1 class="display-title">${escapeHtml(appState.profile.name)}</h1>
+              <p style="color:var(--on-surface-variant);">Active Pathway: ${appState.category} · ${appState.streak}-day study streak</p>
+            </div>
+          </div>
+          <div class="chip-row">
+            <span class="badge tabular">${appState.xp} Total XP</span>
+            <button class="btn btn-outline btn-sm" onclick="navigateTo('settings')">Edit Profile</button>
+          </div>
+        </section>
+
+        <section class="split-grid" style="margin-top:var(--space-lg);">
+          <div class="card">
+            <h2 class="card-title">Earned Achievement Badges</h2>
+            <div class="card-grid" style="margin-top:var(--space-md);">
+              ${BADGES_META.map(b => {
+                const got = appState.badges.includes(b.id);
+                return `
+                  <div class="card-soft" style="opacity:${got ? 1 : 0.5};">
+                    <div style="font-size:1.6rem;">${b.icon}</div>
+                    <div style="font-weight:800;margin-top:4px;">${b.name}</div>
+                    <div style="font-size:0.84rem;color:var(--on-surface-variant);">${b.desc}</div>
+                    <span class="badge ${got ? `badge-positive` : `badge-neutral`}" style="margin-top:var(--space-xs);">${got ? `Earned` : `Locked`}</span>
+                  </div>
+                `;
+              }).join(``)}
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">XP Study Circle Leaderboard</h2>
+            <div class="table-wrap" style="margin-top:var(--space-md);">
+              <table>
+                <thead><tr><th>Rank</th><th>Student</th><th>XP</th></tr></thead>
+                <tbody>
+                  ${board.map((row, idx) => `
+                    <tr style="${row.isYou ? `background:var(--primary-container);font-weight:800;` : ``}">
+                      <td class="tabular">#${idx + 1}</td>
+                      <td>${escapeHtml(row.name)}</td>
+                      <td class="tabular">${row.xp} XP</td>
+                    </tr>
+                  `).join(``)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    // ---- 11. PROFILE SETTINGS DASHBOARD ----
+    function renderSettings() {
+      const p = appState.profile;
+      return `
+        <section class="card-hero">
+          <div class="kicker">Account &amp; Customisation</div>
+          <h1 class="display-title">Profile <em>Settings</em></h1>
+        </section>
+
+        <section class="split-grid" style="margin-top:var(--space-lg);">
+          <div class="card" style="display:flex;flex-direction:column;gap:var(--space-md);">
+            <h2 class="card-title">Student Details &amp; Avatar</h2>
+            <div class="field">
+              <label for="set-name">Student Full Name</label>
+              <input id="set-name" class="input" value="${escapeHtml(p.name)}">
+            </div>
+            <div class="field">
+              <label for="set-school">District / School / Stream</label>
+              <input id="set-school" class="input" value="${escapeHtml(p.school)}">
+            </div>
+            <div>
+              <div class="kicker" style="margin-bottom:var(--space-xs);">Select Avatar</div>
+              <div class="chip-row">
+                ${AVATARS.map(a => `
+                  <button class="avatar-btn ${p.avatar === a.id ? `active` : ``}" onclick="selectAvatar('${a.id}')">${a.icon}</button>
+                `).join(``)}
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="saveProfileSettings()">Save Profile Changes</button>
+            <div id="settings-msg"></div>
+          </div>
+
+          <div class="card" style="display:flex;flex-direction:column;gap:var(--space-md);">
+            <h2 class="card-title">Notification &amp; Data Preferences</h2>
+            <label style="display:flex;align-items:center;gap:var(--space-sm);cursor:pointer;">
+              <input type="checkbox" id="notif-daily" ${p.notifications.dailyReminder ? `checked` : ``}>
+              <span>Daily study reminder notifications</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:var(--space-sm);cursor:pointer;">
+              <input type="checkbox" id="notif-exam" ${p.notifications.examAlerts ? `checked` : ``}>
+              <span>G.C.E. O/L &amp; A/L exam milestone alerts</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:var(--space-sm);cursor:pointer;">
+              <input type="checkbox" id="notif-sound" ${p.notifications.soundEffects ? `checked` : ``}>
+              <span>Audio chime &amp; pronunciation cues</span>
+            </label>
+            <div class="chip-row" style="margin-top:var(--space-sm);">
+              <button class="btn btn-secondary btn-sm" onclick="exportProgressData()">Export Progress (CSV)</button>
+              <button class="btn btn-outline btn-sm" onclick="resetAllProgress(this)">Reset All Progress</button>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    // ---- 12. STUDY GOALS DASHBOARD ----
+    function renderGoals() {
+      const g = appState.goals;
+      return `
+        <section class="card-hero">
+          <div class="kicker">Personalised Learning Pacing</div>
+          <h1 class="display-title">Daily <em>Study Goals</em></h1>
+          <p style="color:var(--on-surface-variant);margin-top:var(--space-xs);">
+            Adjust your daily targets to automatically adapt your Daily Tasks checklist.
+          </p>
+        </section>
+
+        <section class="card" style="margin-top:var(--space-lg);max-width:680px;display:flex;flex-direction:column;gap:var(--space-md);">
+          <div class="field">
+            <label for="goal-mins">Daily Study Duration (minutes): <strong id="goal-mins-val">${g.dailyMinutes} min</strong></label>
+            <input type="range" id="goal-mins" min="10" max="90" step="5" value="${g.dailyMinutes}" oninput="syncGoalMins(this.value)">
+          </div>
+          <div class="field">
+            <label for="goal-lessons">Daily Lesson Target</label>
+            <select id="goal-lessons" class="select">
+              <option value="1" ${g.dailyLessons === 1 ? `selected` : ``}>1 lesson / day (Light)</option>
+              <option value="2" ${g.dailyLessons === 2 ? `selected` : ``}>2 lessons / day (O/L &amp; A/L Standard)</option>
+              <option value="3" ${g.dailyLessons === 3 ? `selected` : ``}>3 lessons / day (Intensive Exam Prep)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="goal-vocab">Daily Vocabulary Target (words)</label>
+            <input type="number" id="goal-vocab" class="input" min="5" max="50" value="${g.dailyVocab}">
+          </div>
+          <div class="field">
+            <label for="goal-time">Preferred Reminder Time</label>
+            <input type="time" id="goal-time" class="input" value="${escapeHtml(g.reminderTime)}">
+          </div>
+          <button class="btn btn-primary" onclick="saveStudyGoals()">Save Study Goals</button>
+          <div id="goals-msg"></div>
+        </section>
+      `;
+    }
+
+    // =========================================================================
+    // 7. INTERACTIVE ACTIVITIES & 10 MINI-GAMES ENGINES
+    // =========================================================================
+    function getPoolForActiveLang() {
+      const items = [];
+      LESSONS.filter(l => l.lang === appState.activeLang).forEach(l => {
+        l.vocab.forEach(v => items.push({ ...v, level: l.level, lessonTitle: l.title, grammarNote: l.grammarNote }));
+      });
+      return items;
+    }
+
+    function setActivityFilter(f) {
+      appState.activeActivityFilter = f;
+      if (f !== `all`) appState.activeActivityId = f;
+      renderApp();
+    }
+
+    function launchActivity(actId) {
+      appState.activeActivityId = actId;
+      renderApp();
+    }
+
+    function initActivityUI() {
+      const act = ACTIVITIES_META.find(a => a.id === appState.activeActivityId) || ACTIVITIES_META[0];
+      const titleEl = document.getElementById(`act-stage-title`);
+      const bodyEl = document.getElementById(`act-stage-body`);
+      if (!titleEl || !bodyEl) return;
+      titleEl.textContent = act.name;
+
+      const pool = getPoolForActiveLang();
+      const target = pool[Math.floor(Math.random() * pool.length)];
+      const distractors = pool.filter(p => p.en !== target.en).sort(() => Math.random() - 0.5).slice(0, 3);
+      const options = [target, ...distractors].sort(() => Math.random() - 0.5);
+
+      if (act.id === `flashcards`) {
+        bodyEl.innerHTML = `
+          <div class="card-soft fc-card" style="text-align:center;padding:var(--space-xl);">
+            <div class="kicker">Tap card to reveal translation</div>
+            <div class="script-box" style="margin:var(--space-md) 0;">${escapeHtml(target.term)}</div>
+            <div class="fc-back" style="display:none;font-weight:700;color:var(--primary);margin-bottom:var(--space-md);">${escapeHtml(target.en)} (/${escapeHtml(target.pron)}/)</div>
+            <div class="chip-row" style="justify-content:center;">
+              <button class="btn btn-outline btn-sm" onclick="revealFlashcard(this)">Flip Card</button>
+              <button class="btn btn-secondary btn-sm" onclick="speakText('${escapeHtml(target.term.replace(/'/g, ` `))}')">Listen</button>
+              <button class="btn btn-primary btn-sm" onclick="awardXP(10,'reading');initActivityUI();">Next Card (+10 XP)</button>
+            </div>
+          </div>
+        `;
+      } else if (act.id === `writing` || act.id === `fillblank`) {
+        bodyEl.innerHTML = `
+          <p><strong>Prompt:</strong> Write or complete the expression for <em>"${escapeHtml(target.en)}"</em> (hint: ${escapeHtml(target.pron)}).</p>
+          <div class="field" style="margin-top:var(--space-sm);">
+            <label for="act-write-in">Your Answer</label>
+            <input id="act-write-in" class="input" placeholder="Type in ${LANGUAGES[appState.activeLang].name}...">
+          </div>
+          <div class="chip-row" style="margin-top:var(--space-sm);">
+            <button class="btn btn-primary btn-sm" onclick="checkActivityText('${escapeHtml(target.term)}')">Check Answer</button>
+            <button class="btn btn-outline btn-sm" onclick="initActivityUI()">New Prompt</button>
+          </div>
+          <div id="act-feedback"></div>
+        `;
+      } else if (act.id === `listening` || act.id === `pronunciation`) {
+        bodyEl.innerHTML = `
+          <p>Listen to the audio cue, then select the matching English meaning.</p>
+          <button class="btn btn-secondary" style="margin:var(--space-sm) 0;" onclick="speakText('${escapeHtml(target.term.replace(/'/g, ` `))}')">
+            <i data-lucide="volume-2"></i> Play Spoken Phrase
+          </button>
+          <div style="display:flex;flex-direction:column;gap:var(--space-xs);margin-top:var(--space-sm);">
+            ${options.map(o => `
+              <button class="btn btn-outline" onclick="checkActivityChoice(this, ${o.en === target.en})">${escapeHtml(o.en)}</button>
+            `).join(``)}
+          </div>
+          <div id="act-feedback"></div>
+        `;
+      } else {
+        bodyEl.innerHTML = `
+          <p><strong>Select the accurate meaning for:</strong></p>
+          <div class="script-box" style="margin:var(--space-sm) 0;">${escapeHtml(target.term)}</div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-xs);">
+            ${options.map(o => `
+              <button class="btn btn-outline" onclick="checkActivityChoice(this, ${o.en === target.en})">${escapeHtml(o.en)}</button>
+            `).join(``)}
+          </div>
+          <div id="act-feedback"></div>
+        `;
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function revealFlashcard(btn) {
+      const card = btn ? btn.closest(`.fc-card`) : null;
+      const back = card ? card.querySelector(`.fc-back`) : null;
+      if (back) back.style.display = `block`;
+    }
+
+    function checkActivityChoice(btn, isRight) {
+      const fb = document.getElementById(`act-feedback`);
+      if (!fb) return;
+      if (isRight) {
+        awardXP(15, `reading`);
+        fb.innerHTML = `<div class="feedback-banner feedback-ok">Correct! +15 XP awarded. Loading next prompt…</div>`;
+        setTimeout(initActivityUI, 900);
+      } else {
+        fb.innerHTML = `<div class="feedback-banner feedback-err">Not quite — try another option or listen to the audio cue.</div>`;
+      }
+    }
+
+    function checkActivityText(expected) {
+      const inp = document.getElementById(`act-write-in`);
+      const fb = document.getElementById(`act-feedback`);
+      if (!inp || !fb) return;
+      const val = inp.value.trim().toLowerCase();
+      if (!val) {
+        fb.innerHTML = `<div class="feedback-banner feedback-err">Please type an answer before checking.</div>`;
+        return;
+      }
+      if (expected.toLowerCase().includes(val) || val.length >= 2) {
+        awardXP(15, `writing`);
+        fb.innerHTML = `<div class="feedback-banner feedback-ok">Model answer: ${escapeHtml(expected)}. +15 XP awarded!</div>`;
+      }
+    }
+
+    // ---- MINI-GAMES ENGINE (All 10 Mini-Games Fully Playable) ----
+    function selectMiniGame(gameId) {
+      stopGameTimer();
+      appState.activeGameId = gameId;
+      saveAppState();
+      renderApp();
+    }
+
+    function stopGameTimer() {
+      if (gameTimerId) { clearInterval(gameTimerId); gameTimerId = null; }
+    }
+
+    function initMiniGameUI() {
+      const box = document.getElementById(`game-arena-content`);
+      if (!box) return;
+      const meta = MINIGAMES_META.find(g => g.id === appState.activeGameId) || MINIGAMES_META[0];
+      const pool = getPoolForActiveLang();
+      gameRuntime = { id: meta.id, score: 0, round: 1, maxRounds: 5, timeLeft: 30, selectedLeft: null, matched: 0, flipped: [] };
+
+      box.innerHTML = `
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-md);">
+          <div>
+            <div class="kicker">Reward: +${meta.xp} XP</div>
+            <h2 class="section-title">${meta.name}</h2>
+            <p style="color:var(--on-surface-variant);">${meta.desc}</p>
+          </div>
+          <div class="chip-row">
+            <span class="badge tabular" id="game-score-pill">Score: 0</span>
+            <span class="badge badge-neutral tabular" id="game-round-pill">Round 1/${gameRuntime.maxRounds}</span>
+            <button class="btn btn-outline btn-sm" onclick="initMiniGameUI()">Restart</button>
+          </div>
+        </div>
+        <div id="game-board" class="card-soft"></div>
+        <div id="game-feedback"></div>
+      `;
+
+      renderGameRound(pool, meta);
+    }
+
+    function renderGameRound(pool, meta) {
+      const board = document.getElementById(`game-board`);
+      if (!board) return;
+      const scoreEl = document.getElementById(`game-score-pill`);
+      const roundEl = document.getElementById(`game-round-pill`);
+      if (scoreEl) scoreEl.textContent = `Score: ${gameRuntime.score}`;
+      if (roundEl) roundEl.textContent = gameRuntime.id === `speed_quiz` ? `Time: ${gameRuntime.timeLeft}s` : `Round ${gameRuntime.round}/${gameRuntime.maxRounds}`;
+
+      if (gameRuntime.id === `word_matching`) {
+        const pairs = pool.slice().sort(() => Math.random() - 0.5).slice(0, 4);
+        const rights = pairs.slice().sort(() => Math.random() - 0.5);
+        board.innerHTML = `
+          <p style="margin-bottom:var(--space-sm);font-weight:700;">Tap a foreign term, then tap its matching English translation:</p>
+          <div class="split-grid">
+            <div style="display:flex;flex-direction:column;gap:var(--space-xs);">
+              ${pairs.map((p, i) => `<button class="btn btn-outline" id="match-l-${i}" onclick="pickMatchLeft(${i}, '${escapeHtml(p.en)}')">${escapeHtml(p.term)}</button>`).join(``)}
+            </div>
+            <div style="display:flex;flex-direction:column;gap:var(--space-xs);">
+              ${rights.map((p, i) => `<button class="btn btn-outline" id="match-r-${i}" onclick="pickMatchRight(${i}, '${escapeHtml(p.en)}')">${escapeHtml(p.en)}</button>`).join(``)}
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (gameRuntime.id === `memory_cards`) {
+        const pairs = pool.slice().sort(() => Math.random() - 0.5).slice(0, 4);
+        const cards = [];
+        pairs.forEach((p, idx) => {
+          cards.push({ key: idx, text: p.term });
+          cards.push({ key: idx, text: p.en });
+        });
+        cards.sort(() => Math.random() - 0.5);
+        gameRuntime.memCards = cards;
+        gameRuntime.memOpen = [];
+        gameRuntime.memDone = [];
+        board.innerHTML = `
+          <div class="tone-grid">
+            ${cards.map((c, idx) => `
+              <button class="card" id="mem-card-${idx}" style="min-height:84px;font-weight:700;cursor:pointer;" onclick="flipMemoryCard(${idx})">?</button>
+            `).join(``)}
+          </div>
+        `;
+        return;
+      }
+
+      if (gameRuntime.id === `sentence_builder`) {
+        const activeLesson = LESSONS.find(l => l.lang === appState.activeLang && l.dialogue.length) || LESSONS[0];
+        const targetLine = activeLesson.dialogue[0].line;
+        const tokens = targetLine.split(` `).filter(Boolean);
+        const shuffled = tokens.slice().sort(() => Math.random() - 0.5);
+        gameRuntime.expectedSentence = tokens.join(` `);
+        gameRuntime.builtTokens = [];
+        board.innerHTML = `
+          <p style="font-weight:700;">Arrange the tokens to form: <em>"${escapeHtml(activeLesson.dialogue[0].en)}"</em></p>
+          <div id="sb-target" class="card" style="min-height:54px;margin:var(--space-sm) 0;font-weight:800;">Tap words below…</div>
+          <div class="chip-row" id="sb-bank">
+            ${shuffled.map((t, i) => `<button class="chip" id="sb-tok-${i}" onclick="addSentenceToken(${i}, '${escapeHtml(t)}')">${escapeHtml(t)}</button>`).join(``)}
+          </div>
+          <div class="chip-row" style="margin-top:var(--space-md);">
+            <button class="btn btn-primary btn-sm" onclick="checkSentenceBuilder()">Verify Sentence</button>
+            <button class="btn btn-outline btn-sm" onclick="renderGameRound(getPoolForActiveLang(), MINIGAMES_META[2])">Reset Words</button>
+          </div>
+        `;
+        return;
+      }
+
+      if (gameRuntime.id === `speed_quiz` && !gameTimerId) {
+        gameTimerId = setInterval(() => {
+          gameRuntime.timeLeft -= 1;
+          const el = document.getElementById(`game-round-pill`);
+          if (el) el.textContent = `Time: ${gameRuntime.timeLeft}s`;
+          if (gameRuntime.timeLeft <= 0) {
+            stopGameTimer();
+            finishMiniGame(meta);
+          }
+        }, 1000);
+      }
+
+      // Default quiz engine for Vocab Challenge, Listening, Character Recognition, Grammar, Daily, Level Completion
+      const target = pool[Math.floor(Math.random() * pool.length)];
+      const distractors = pool.filter(p => p.en !== target.en).sort(() => Math.random() - 0.5).slice(0, 3);
+      const opts = [target, ...distractors].sort(() => Math.random() - 0.5);
+
+      let promptHtml = `<div class="script-box" style="margin-bottom:var(--space-sm);">${escapeHtml(target.term)}</div>`;
+      if (gameRuntime.id === `listening_challenge`) {
+        promptHtml = `
+          <button class="btn btn-secondary" style="margin-bottom:var(--space-sm);" onclick="speakText('${escapeHtml(target.term.replace(/'/g, ` `))}')">
+            <i data-lucide="volume-2"></i> Play Audio Clue
+          </button>
+        `;
+      } else if (gameRuntime.id === `char_recognition`) {
+        promptHtml = `<div class="kicker">Pronunciation: /${escapeHtml(target.pron)}/</div><div class="script-box" style="margin:var(--space-xs) 0;">${escapeHtml(target.term)}</div>`;
+      } else if (gameRuntime.id === `grammar_challenge`) {
+        promptHtml = `<p class="card-soft" style="margin-bottom:var(--space-sm);"><strong>Grammar clue:</strong> ${escapeHtml(target.grammarNote)}</p><div style="font-weight:800;margin-bottom:var(--space-sm);">Which meaning matches <em>${escapeHtml(target.term)}</em>?</div>`;
+      }
+
+      board.innerHTML = `
+        ${promptHtml}
+        <div class="card-grid" style="margin-top:var(--space-sm);">
+          ${opts.map(o => `
+            <button class="btn btn-outline" onclick="answerMiniGameQuiz(${o.en === target.en})">${escapeHtml(o.en)}</button>
+          `).join(``)}
+        </div>
+      `;
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function answerMiniGameQuiz(isRight) {
+      const fb = document.getElementById(`game-feedback`);
+      const meta = MINIGAMES_META.find(g => g.id === appState.activeGameId) || MINIGAMES_META[0];
+      if (isRight) {
+        gameRuntime.score += 20;
+        playTone(659.25, 0.1);
+        if (fb) fb.innerHTML = `<div class="feedback-banner feedback-ok">Spot on! +20 pts</div>`;
+      } else {
+        playTone(220, 0.12);
+        if (fb) fb.innerHTML = `<div class="feedback-banner feedback-err">Missed that one — keep going!</div>`;
+      }
+      if (gameRuntime.id === `speed_quiz`) {
+        renderGameRound(getPoolForActiveLang(), meta);
+        return;
+      }
+      gameRuntime.round += 1;
+      if (gameRuntime.round > gameRuntime.maxRounds) {
+        finishMiniGame(meta);
+      } else {
+        setTimeout(() => renderGameRound(getPoolForActiveLang(), meta), 550);
+      }
+    }
+
+    function pickMatchLeft(idx, en) {
+      gameRuntime.selectedLeft = { idx, en };
+      document.querySelectorAll(`[id^="match-l-"]`).forEach(b => b.classList.remove(`btn-primary`));
+      const btn = document.getElementById(`match-l-${idx}`);
+      if (btn) btn.classList.add(`btn-primary`);
+    }
+
+    function pickMatchRight(idx, en) {
+      if (!gameRuntime.selectedLeft) return;
+      const fb = document.getElementById(`game-feedback`);
+      if (gameRuntime.selectedLeft.en === en) {
+        const lBtn = document.getElementById(`match-l-${gameRuntime.selectedLeft.idx}`);
+        const rBtn = document.getElementById(`match-r-${idx}`);
+        if (lBtn) lBtn.disabled = true;
+        if (rBtn) rBtn.disabled = true;
+        gameRuntime.score += 25;
+        gameRuntime.matched += 1;
+        gameRuntime.selectedLeft = null;
+        if (fb) fb.innerHTML = `<div class="feedback-banner feedback-ok">Matched!</div>`;
+        if (gameRuntime.matched >= 4) finishMiniGame(MINIGAMES_META[1]);
+      } else {
+        if (fb) fb.innerHTML = `<div class="feedback-banner feedback-err">Not a match — try another pair.</div>`;
+      }
+    }
+
+    function flipMemoryCard(idx) {
+      if (gameRuntime.memDone.includes(idx) || gameRuntime.memOpen.includes(idx) || gameRuntime.memOpen.length >= 2) return;
+      const btn = document.getElementById(`mem-card-${idx}`);
+      if (btn) btn.textContent = gameRuntime.memCards[idx].text;
+      gameRuntime.memOpen.push(idx);
+      if (gameRuntime.memOpen.length === 2) {
+        const [a, b] = gameRuntime.memOpen;
+        if (gameRuntime.memCards[a].key === gameRuntime.memCards[b].key) {
+          gameRuntime.memDone.push(a, b);
+          gameRuntime.score += 25;
+          gameRuntime.memOpen = [];
+          if (gameRuntime.memDone.length === gameRuntime.memCards.length) finishMiniGame(MINIGAMES_META[6]);
+        } else {
+          setTimeout(() => {
+            const ba = document.getElementById(`mem-card-${a}`);
+            const bb = document.getElementById(`mem-card-${b}`);
+            if (ba) ba.textContent = `?`;
+            if (bb) bb.textContent = `?`;
+            gameRuntime.memOpen = [];
+          }, 700);
+        }
+      }
+    }
+
+    function addSentenceToken(idx, tok) {
+      const btn = document.getElementById(`sb-tok-${idx}`);
+      if (btn) btn.disabled = true;
+      gameRuntime.builtTokens.push(tok);
+      const tgt = document.getElementById(`sb-target`);
+      if (tgt) tgt.textContent = gameRuntime.builtTokens.join(` `);
+    }
+
+    function checkSentenceBuilder() {
+      const fb = document.getElementById(`game-feedback`);
+      const built = gameRuntime.builtTokens.join(` `);
+      if (built === gameRuntime.expectedSentence) {
+        gameRuntime.score = 100;
+        finishMiniGame(MINIGAMES_META[2]);
+      } else if (fb) {
+        fb.innerHTML = `<div class="feedback-banner feedback-err">Order mismatch — tap Reset Words and try again.</div>`;
+      }
+    }
+
+    function finishMiniGame(meta) {
+      stopGameTimer();
+      appState.gamesWon += 1;
+      awardXP(meta.xp, `listening`);
+      if (meta.id === `level_challenge` && gameRuntime.score >= 60) {
+        const cur = getUnlockedLevel(appState.activeLang);
+        if (cur < 5) unlockLevelNow(cur + 1);
+      }
+      const board = document.getElementById(`game-board`);
+      if (board) {
+        board.innerHTML = `
+          <div style="text-align:center;padding:var(--space-lg);">
+            <div class="section-title">Round Complete!</div>
+            <p style="margin:var(--space-sm) 0;">Final Score: <strong>${gameRuntime.score}</strong> · Reward Earned: <strong>+${meta.xp} XP</strong></p>
+            <button class="btn btn-primary" onclick="initMiniGameUI()">Play Again</button>
+          </div>
+        `;
+      }
+    }
+
+    // =========================================================================
+    // 8. ACTION HANDLERS (All hoisted function declarations)
+    // =========================================================================
+    function selectAvatar(avId) {
+      appState.profile.avatar = avId;
+      saveAppState();
+      renderApp();
+    }
+
+    function toggleDailyTask(taskId) {
+      const idx = appState.dailyTasksDone.indexOf(taskId);
+      if (idx >= 0) {
+        appState.dailyTasksDone.splice(idx, 1);
+      } else {
+        appState.dailyTasksDone.push(taskId);
+        awardXP(20, `reading`);
+      }
+      saveAppState();
+      renderApp();
+    }
+
+    function openLevelLessons(level) {
+      appState.selectedLevel = level;
+      const found = LESSONS.find(l => l.lang === appState.activeLang && l.level === level);
+      if (found) appState.selectedLessonId = found.id;
+      navigateTo(`lessons`);
+    }
+
+    function unlockLevelNow(level) {
+      const langId = appState.activeLang;
+      if (!appState.unlockedLevels[langId]) appState.unlockedLevels[langId] = { OL: 1, AL: 1 };
+      const key = getEffectiveCategoryKey();
+      appState.unlockedLevels[langId][key] = Math.max(appState.unlockedLevels[langId][key] || 1, level);
+      if (level >= 2 && !appState.badges.includes(`level_climber`)) {
+        appState.badges.push(`level_climber`);
+      }
+      saveAppState();
+      renderApp();
+    }
+
+    function startLevelAssessment() {
+      appState.activeGameId = `level_challenge`;
+      navigateTo(`games`);
+    }
+
+    function selectLesson(lessonId) {
+      appState.selectedLessonId = lessonId;
+      saveAppState();
+      renderApp();
+    }
+
+    function toggleBookmark(lessonId) {
+      const idx = appState.bookmarks.indexOf(lessonId);
+      if (idx >= 0) appState.bookmarks.splice(idx, 1);
+      else appState.bookmarks.push(lessonId);
+      saveAppState();
+      renderApp();
+    }
+
+    function completeLesson(lessonId) {
+      if (!appState.completedLessons.includes(lessonId)) {
+        appState.completedLessons.push(lessonId);
+        awardXP(25, `speaking`);
+      }
+      saveAppState();
+      renderApp();
+    }
+
+    function showScriptDetail(ch, title, detail, langId) {
+      speakText(ch, langId);
+      if (!appState.badges.includes(`script_explorer`)) appState.badges.push(`script_explorer`);
+      const out = document.getElementById(`script-detail-out`);
+      if (out) {
+        out.innerHTML = `<span class="script-box" style="font-size:1.75rem;margin-right:12px;">${escapeHtml(ch)}</span> <strong>${escapeHtml(title)}</strong> — ${escapeHtml(detail)}`;
+      }
+      saveAppState();
+    }
+
+    function submitLessonWriting(lessonId) {
+      const box = document.getElementById(`lesson-writing-box`);
+      const fb = document.getElementById(`lesson-writing-feedback`);
+      if (!box || !fb) return;
+      const text = box.value.trim();
+      if (text.length < 6) {
+        fb.innerHTML = `<div class="feedback-banner feedback-err">Write at least 6 characters to save and receive feedback.</div>`;
+        return;
+      }
+      appState.notesByLesson[lessonId] = text;
+      awardXP(10, `writing`);
+      fb.innerHTML = `<div class="feedback-banner feedback-ok">Saved! Good sentence structure (${text.split(/\s+/).length} words). +10 XP earned.</div>`;
+    }
+
+    function saveProfileSettings() {
+      const nameEl = document.getElementById(`set-name`);
+      const schoolEl = document.getElementById(`set-school`);
+      const dEl = document.getElementById(`notif-daily`);
+      const eEl = document.getElementById(`notif-exam`);
+      const sEl = document.getElementById(`notif-sound`);
+      const msg = document.getElementById(`settings-msg`);
+      if (nameEl && nameEl.value.trim()) appState.profile.name = nameEl.value.trim();
+      if (schoolEl && schoolEl.value.trim()) appState.profile.school = schoolEl.value.trim();
+      if (dEl) appState.profile.notifications.dailyReminder = dEl.checked;
+      if (eEl) appState.profile.notifications.examAlerts = eEl.checked;
+      if (sEl) appState.profile.notifications.soundEffects = sEl.checked;
+      saveAppState();
+      updateTopbar();
+      if (msg) msg.innerHTML = `<div class="feedback-banner feedback-ok">Profile settings saved.</div>`;
+    }
+
+    function syncGoalMins(val) {
+      const el = document.getElementById(`goal-mins-val`);
+      if (el) el.textContent = `${val} min`;
+    }
+
+    function saveStudyGoals() {
+      const mins = document.getElementById(`goal-mins`);
+      const les = document.getElementById(`goal-lessons`);
+      const voc = document.getElementById(`goal-vocab`);
+      const tm = document.getElementById(`goal-time`);
+      const msg = document.getElementById(`goals-msg`);
+      if (mins) appState.goals.dailyMinutes = Number(mins.value);
+      if (les) appState.goals.dailyLessons = Number(les.value);
+      if (voc) appState.goals.dailyVocab = Math.max(5, Math.min(50, Number(voc.value) || 15));
+      if (tm && tm.value) appState.goals.reminderTime = tm.value;
+      saveAppState();
+      if (msg) msg.innerHTML = `<div class="feedback-banner feedback-ok">Study goals updated and synced to your Daily Tasks!</div>`;
+    }
+
+    function exportProgressData() {
+      const rows = [
+        `Metric,Value`,
+        `Student,${appState.profile.name}`,
+        `Active Language,${LANGUAGES[appState.activeLang].name}`,
+        `Category,${appState.category}`,
+        `XP,${appState.xp}`,
+        `Completed Lessons,${appState.completedLessons.length}`
+      ].join(`\n`);
+      if (window.notebookAppApi && typeof window.notebookAppApi.triggerFileDownload === `function`) {
+        window.notebookAppApi.triggerFileDownload({
+          content: rows,
+          contentType: `text/csv`,
+          encoding: `UTF-8`,
+          filename: `lingo-mate-progress.csv`
+        });
+      }
+    }
+
+    function resetAllProgress(btn) {
+      if (btn.dataset.armed !== `true`) {
+        btn.dataset.armed = `true`;
+        btn.textContent = `Click again to confirm reset`;
+        return;
+      }
+      btn.dataset.armed = `false`;
+      btn.textContent = `Reset All Progress`;
+      appState = cloneState(DEFAULT_STATE);
+      saveAppState();
+      renderApp();
+    }
+
+    // =========================================================================
+    // 9. BOOTSTRAP
+    // =========================================================================
+    (async function boot() {
+      await loadAppState();
+      renderApp();
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === `function`) {
+        window.notebookAppApi.notifyAppReady();
+      }
+    })();
+  </script>
+</body>
+</html>
